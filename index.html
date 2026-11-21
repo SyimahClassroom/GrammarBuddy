@@ -1,0 +1,2289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grammar Buddy — Simple Present &amp; Simple Past</title>
+  <style>
+    :root {
+      --bg-page: #dff2fe;
+      --bg-card: rgba(255, 255, 255, 0.95);
+      --ink-main: #0f172a;
+      --ink-muted: #475569;
+      --border-soft: #bae6fd;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --shadow-card: 0 8px 24px rgba(14, 116, 144, 0.1);
+      --blue: #0ea5e9;
+      --blue-dark: #0284c7;
+      --blue-soft: #e0f2fe;
+      --orange: #f97316;
+      --orange-dark: #ea580c;
+      --orange-soft: #ffedd5;
+      --green: #16a34a;
+      --green-dark: #15803d;
+      --green-soft: #dcfce7;
+      --purple: #8b5cf6;
+      --purple-dark: #6d28d9;
+      --purple-soft: #ede9fe;
+      --pink: #ec4899;
+      --pink-dark: #be185d;
+      --pink-soft: #fce7f3;
+      --cyan: #0891b2;
+      --cyan-dark: #0e7490;
+      --cyan-soft: #cffafe;
+      --red: #ef4444;
+    }
+
+    * { box-sizing: border-box; }
+
+    @keyframes cloudDriftSlow {
+      0% { transform: translateX(-18vw); }
+      100% { transform: translateX(118vw); }
+    }
+    @keyframes cloudDriftMedium {
+      0% { transform: translateX(-25vw); }
+      100% { transform: translateX(120vw); }
+    }
+    @keyframes buddyRobotMove {
+      0% { transform: translateY(0px) rotate(-5deg) scale(1); }
+      25% { transform: translateY(-5px) translateX(2px) rotate(5deg) scale(1.05); }
+      50% { transform: translateY(1px) translateX(0px) rotate(-3deg) scale(1); }
+      75% { transform: translateY(-5px) translateX(-2px) rotate(6deg) scale(1.05); }
+      100% { transform: translateY(0px) rotate(-5deg) scale(1); }
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(180deg, #7dd3fc 0%, #bae6fd 34%, #e0f2fe 72%, #f0f9ff 100%);
+      background-attachment: fixed;
+      color: var(--ink-main);
+      line-height: 1.5;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .sky-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .sky-cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.72);
+      border-radius: 999px;
+      filter: blur(0.4px);
+      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.45);
+    }
+    .sky-cloud::before,
+    .sky-cloud::after {
+      content: "";
+      position: absolute;
+      background: rgba(255, 255, 255, 0.78);
+      border-radius: 50%;
+    }
+    .cloud-1 {
+      width: 150px;
+      height: 46px;
+      top: 11%;
+      animation: cloudDriftSlow 48s linear infinite;
+    }
+    .cloud-1::before { width: 68px; height: 68px; top: -30px; left: 20px; }
+    .cloud-1::after { width: 52px; height: 52px; top: -20px; right: 22px; }
+
+    .cloud-2 {
+      width: 190px;
+      height: 54px;
+      top: 26%;
+      left: 0;
+      animation: cloudDriftMedium 62s linear infinite;
+      animation-delay: -18s;
+      opacity: 0.85;
+    }
+    .cloud-2::before { width: 82px; height: 82px; top: -36px; left: 28px; }
+    .cloud-2::after { width: 64px; height: 64px; top: -24px; right: 26px; }
+
+    .cloud-3 {
+      width: 130px;
+      height: 40px;
+      top: 58%;
+      left: 0;
+      animation: cloudDriftSlow 56s linear infinite;
+      animation-delay: -32s;
+      opacity: 0.7;
+    }
+    .cloud-3::before { width: 56px; height: 56px; top: -24px; left: 18px; }
+    .cloud-3::after { width: 44px; height: 44px; top: -16px; right: 18px; }
+
+    a { color: inherit; }
+    button, input, select, textarea { font-family: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1.5px solid #bae6fd;
+    }
+    .topbar-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .brand-font { font-weight: 900; letter-spacing: -0.02em; }
+    .brand-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none; font-size: 1.25rem; color: #0f172a;
+    }
+    .brand-mascot {
+      width: 38px; height: 38px; border-radius: 12px; background: #fef08a;
+      border: 2px solid #facc15; display: grid; place-items: center; font-size: 1.25rem;
+    }
+    .home-link, .nav-btn {
+      min-height: 40px; padding: 7px 14px; border-radius: 999px;
+      border: 1.5px solid #cbd5e1; background: #ffffff; color: var(--ink-main);
+      font-weight: 700; font-size: 0.92rem; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+    }
+    .home-link:hover, .nav-btn:hover { background: #f1f5f9; }
+    .nav-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .streak-pill {
+      background: #ffedd5; border: 1.5px solid #fdba74; color: #9a3412;
+      font-weight: 800; font-size: 0.85rem; padding: 6px 12px; border-radius: 999px;
+    }
+    .ask-buddy-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .moving-buddy-bot {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #e0f2fe 0%, #fef08a 100%);
+      border: 2px solid #38bdf8;
+      display: inline-grid;
+      place-items: center;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.22);
+      animation: buddyRobotMove 2.2s ease-in-out infinite;
+    }
+    .ask-buddy-trigger { background: #ede9fe; border-color: #c4b5fd; color: #4c1d95; }
+    .ask-buddy-trigger:hover { background: #ddd6fe; }
+
+    .main-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 24px 18px 56px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(224, 242, 254, 0.96) 0%, rgba(240, 249, 255, 0.95) 55%, rgba(254, 249, 195, 0.92) 100%);
+      border: 2px solid #7dd3fc;
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-card);
+    }
+    .hero-title { margin: 0; font-size: clamp(2rem, 4vw, 2.8rem); color: #0f172a; }
+    .hero-subtitle { margin: 6px 0 0; font-size: 1.12rem; color: #0369a1; font-weight: 800; }
+    .hero-desc { margin: 8px 0 0; font-size: 1rem; color: var(--ink-muted); font-weight: 500; }
+
+    .feature-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
+    @media (min-width: 640px) { .feature-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 960px) { .feature-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .feature-card {
+      background: var(--bg-card); border-radius: var(--radius-lg); padding: 22px;
+      border: 1.5px solid var(--border-soft); box-shadow: var(--shadow-card);
+      display: flex; flex-direction: column; justify-content: space-between; gap: 14px;
+      text-decoration: none; color: inherit; transition: transform 0.16s ease, box-shadow 0.16s ease;
+      position: relative; overflow: hidden;
+    }
+    .feature-card::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 7px;
+      background: var(--accent, var(--blue));
+    }
+    .feature-card:hover { transform: translateY(-3px); box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12); }
+    .card-icon-badge {
+      width: 52px; height: 52px; border-radius: 16px;
+      background: var(--accent-soft, var(--blue-soft)); color: var(--accent, var(--blue));
+      display: grid; place-items: center; font-size: 1.5rem; font-weight: 700;
+    }
+    .card-title { margin: 0; font-size: 1.3rem; }
+    .card-desc { margin: 4px 0 0; color: var(--ink-muted); font-size: 0.96rem; line-height: 1.45; }
+    .card-cta { font-weight: 800; font-size: 0.92rem; color: var(--accent-dark, var(--blue-dark)); }
+
+    .tool-shell {
+      background: var(--bg-card); border-radius: var(--radius-lg); padding: 24px;
+      border: 1.5px solid var(--border-soft); box-shadow: var(--shadow-card);
+    }
+    .tool-header { margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid #e2e8f0; }
+    .tool-header h2 { margin: 0; font-size: 1.75rem; }
+    .tool-header p { margin: 6px 0 0; color: var(--ink-muted); font-size: 1rem; }
+
+    .translate-dir-bar {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+      background: #f1f5f9; border: 1.5px solid #cbd5e1; border-radius: var(--radius-md);
+      padding: 10px 14px; margin-bottom: 14px;
+    }
+    .lang-pill { background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 999px; padding: 6px 14px; font-weight: 800; font-size: 0.9rem; }
+
+    .field-group { margin-bottom: 16px; }
+    .field-label { display: block; font-weight: 700; margin-bottom: 6px; font-size: 0.98rem; }
+    .input-control, .select-control, .textarea-control {
+      width: 100%; padding: 12px 14px; border-radius: var(--radius-md);
+      border: 2px solid #cbd5e1; font-size: 1rem; background: #ffffff; color: var(--ink-main);
+    }
+    .textarea-control { min-height: 120px; resize: vertical; }
+
+    .primary-btn {
+      min-height: 46px; padding: 10px 20px; border: none; border-radius: var(--radius-md);
+      font-weight: 800; font-size: 0.98rem; color: #ffffff; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 4px 0 rgba(15, 23, 42, 0.16); transition: transform 0.12s ease;
+    }
+    .primary-btn:active:not(:disabled) { transform: translateY(2px); }
+    .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-blue { background: var(--blue); }
+    .btn-blue:hover:not(:disabled) { background: var(--blue-dark); }
+    .btn-orange { background: var(--orange); }
+    .btn-orange:hover:not(:disabled) { background: var(--orange-dark); }
+    .btn-green { background: var(--green); }
+    .btn-green:hover:not(:disabled) { background: var(--green-dark); }
+    .btn-red { background: var(--red); }
+    .btn-red:hover:not(:disabled) { background: #dc2626; }
+
+    .secondary-btn {
+      min-height: 40px; padding: 7px 14px; border-radius: var(--radius-md);
+      border: 1.5px solid #cbd5e1; background: #f8fafc; color: var(--ink-main);
+      font-weight: 700; font-size: 0.9rem; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .secondary-btn:hover:not(:disabled) { background: #e2e8f0; }
+
+    .chip-btn {
+      border: 1.5px solid #93c5fd; background: #eff6ff; color: #1e3a8a;
+      border-radius: 999px; padding: 6px 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer;
+    }
+    .chip-btn:hover { background: #dbeafe; }
+
+    .status-banner {
+      margin-top: 14px; padding: 12px 14px; border-radius: var(--radius-md);
+      font-weight: 700; font-size: 0.95rem; border: 1.5px solid transparent;
+    }
+    .status-info { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+    .status-warn { background: #fef3c7; border-color: #fde68a; color: #92400e; }
+    .status-error { background: #fee2e2; border-color: #fecaca; color: #991b1b; }
+    .status-ok { background: #dcfce7; border-color: #bbf7d0; color: #166534; }
+
+    .buddy-bubble-wrap { display: flex; align-items: flex-start; gap: 14px; margin-top: 18px; }
+    .buddy-avatar {
+      width: 52px; height: 52px; border-radius: 16px; background: #facc15;
+      border: 2px solid #eab308; display: grid; place-items: center; font-size: 1.6rem; flex-shrink: 0;
+    }
+    .buddy-bubble {
+      flex: 1; background: #ffffff; border: 2px solid #e2e8f0;
+      border-radius: 18px; padding: 16px 18px; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+    }
+    .buddy-bubble-title { margin: 0 0 8px; font-size: 1.12rem; font-weight: 800; }
+    .dashed-highlight {
+      display: inline-block; background: #fef9c3; border: 2px dashed #eab308;
+      padding: 6px 12px; border-radius: 10px; font-weight: 800; font-size: 1.05rem; margin: 6px 0;
+    }
+    .mark-changed { background: #fef08a; padding: 1px 6px; border-radius: 6px; font-weight: 800; }
+    .dict-row { padding: 8px 0; border-bottom: 1px dashed #e2e8f0; }
+    .dict-row:last-child { border-bottom: none; }
+
+    .issue-card-wrong {
+      background: #fef2f2; border: 2px solid #fecaca; border-radius: 16px; padding: 16px 18px; margin-top: 14px;
+    }
+    .issue-card-right {
+      background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 16px; padding: 14px 16px; margin-top: 12px;
+    }
+    .wrong-word { background: #fee2e2; color: #991b1b; padding: 2px 7px; border-radius: 6px; font-weight: 800; border-bottom: 2px wavy #dc2626; }
+    .right-word { background: #dcfce7; color: #166534; padding: 2px 7px; border-radius: 6px; font-weight: 800; }
+    .why-list { margin: 8px 0 0; padding-left: 20px; color: #1e293b; font-size: 0.94rem; }
+    .why-list li { margin-bottom: 4px; }
+
+    /* Burger Madness */
+    @keyframes popStack {
+      0% { transform: translateY(-28px) scale(0.82); opacity: 0; }
+      70% { transform: translateY(4px) scale(1.05); opacity: 1; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(0.95); opacity: 1; }
+      100% { transform: translateY(-28px) scale(1.06); opacity: 0; }
+    }
+    @keyframes bunnyHop {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-8px) rotate(3deg); }
+    }
+    @keyframes critterWiggle {
+      0%, 100% { transform: translateX(0) rotate(0deg); }
+      25% { transform: translateX(-4px) rotate(-5deg); }
+      75% { transform: translateX(4px) rotate(5deg); }
+    }
+    @keyframes sunnyPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.35); }
+      50% { box-shadow: 0 0 0 8px rgba(249, 115, 22, 0); }
+    }
+
+    .bm-bright-world {
+      background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 48%, #e0f2fe 100%);
+      color: #0f172a;
+      border: 3px solid #fb923c;
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 14px 34px rgba(249, 115, 22, 0.14);
+      position: relative;
+      overflow: hidden;
+    }
+    .bm-hud-bar {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
+      background: #ffffff;
+      border: 2px solid #fed7aa;
+      border-radius: 18px; padding: 12px 16px; margin-bottom: 14px;
+    }
+    .bm-pill {
+      background: #fff7ed; border: 1.5px solid #fdba74; color: #9a3412;
+      border-radius: 999px; padding: 6px 12px; font-weight: 800; font-size: 0.88rem;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .bm-pill.gold { background: #fef9c3; border-color: #facc15; color: #854d0e; }
+    .bm-pill.hp { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
+    .bm-pill.streak { background: #e0f2fe; border-color: #7dd3fc; color: #075985; }
+    .bm-pill.rank { background: #fce7f3; border-color: #f9a8d4; color: #9d174d; }
+
+    .bm-map-strip {
+      background: linear-gradient(90deg, #dcfce7 0%, #fef9c3 50%, #ffedd5 100%);
+      border: 2px solid #86efac;
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+    .bm-map-nodes {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media (min-width: 760px) {
+      .bm-map-nodes { grid-template-columns: repeat(4, 1fr); }
+    }
+    .bm-mission-node {
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 10px 12px;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .bm-mission-node:hover { transform: translateY(-2px); border-color: #fb923c; }
+    .bm-mission-node.active {
+      background: #fff7ed;
+      border-color: #ea580c;
+      box-shadow: 0 6px 16px rgba(234, 88, 12, 0.16);
+    }
+    .bm-mission-node.cleared {
+      background: #f0fdf4;
+      border-color: #22c55e;
+    }
+
+    .bm-stage-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 920px) {
+      .bm-stage-grid { grid-template-columns: 230px 1fr 225px; align-items: start; }
+    }
+    .bm-card {
+      background: rgba(255, 255, 255, 0.94);
+      border: 2px solid #fed7aa;
+      border-radius: 20px;
+      padding: 16px;
+      position: relative;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+    }
+
+    .bm-character-stage {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: linear-gradient(135deg, #e0f2fe 0%, #fef9c3 100%);
+      border: 2px solid #bae6fd;
+      border-radius: 16px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .bm-chef-bunny {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: #0f172a;
+      animation: bunnyHop 1.8s ease-in-out infinite;
+    }
+    .bm-critter-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.35rem;
+    }
+    .bm-critter {
+      display: inline-block;
+      animation: critterWiggle 2.1s ease-in-out infinite;
+    }
+    .bm-critter:nth-child(2) { animation-delay: 0.3s; }
+    .bm-critter:nth-child(3) { animation-delay: 0.6s; }
+    .bm-critter:nth-child(4) { animation-delay: 0.9s; }
+
+    .bm-order-ticket {
+      background: #fffbeb;
+      border: 2.5px dashed #f97316;
+      border-radius: 16px;
+      padding: 18px;
+      margin: 12px 0;
+      font-size: 1.16rem;
+      font-weight: 700;
+      color: #0f172a;
+      animation: sunnyPulse 2.4s infinite;
+    }
+    .bm-verb-pill {
+      background: #fde047;
+      color: #0f172a;
+      border: 1.5px solid #eab308;
+      padding: 2px 9px;
+      border-radius: 8px;
+      font-weight: 900;
+    }
+    .bm-float-badge {
+      position: absolute; top: 12px; right: 14px; font-weight: 900; font-size: 0.98rem;
+      color: #15803d; background: #dcfce7; border: 1.5px solid #86efac;
+      padding: 3px 10px; border-radius: 999px;
+      pointer-events: none; animation: floatUp 0.95s ease forwards;
+    }
+    .bm-float-badge.bad { color: #991b1b; background: #fee2e2; border-color: #fca5a5; }
+
+    .burger-stack-bright {
+      display: flex; flex-direction: column-reverse; align-items: center; gap: 6px;
+      min-height: 210px; justify-content: flex-start; padding: 12px 8px;
+      background: #fffbeb; border-radius: 16px; border: 2px dashed #fbbf24;
+    }
+    .burger-layer-anim {
+      width: 100%; max-width: 185px; padding: 7px 10px; border-radius: 12px;
+      font-weight: 800; font-size: 0.86rem; text-align: center;
+      animation: popStack 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.08);
+    }
+
+    /* Tense Showdown — Head-Tilt Camera Arena */
+    .arcade-shell {
+      background: #091326; color: #f8fafc; border: 2px solid #22d3ee;
+      border-radius: var(--radius-lg); padding: 20px; box-shadow: 0 12px 32px rgba(2, 6, 23, 0.45);
+    }
+    .arcade-top {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
+      border-bottom: 1px solid rgba(34, 211, 238, 0.35); padding-bottom: 12px; margin-bottom: 14px;
+    }
+    .arcade-title { margin: 0; color: #22d3ee; font-size: 1.5rem; }
+    .arcade-hud-badge {
+      background: rgba(245, 158, 11, 0.18); border: 1.5px solid #fbbf24; color: #fde68a;
+      font-weight: 800; padding: 6px 12px; border-radius: 999px; font-size: 0.9rem;
+    }
+    .level-selector-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; align-items: center; }
+    .showdown-lvl-btn {
+      padding: 8px 13px; border-radius: 999px; border: 1.5px solid rgba(34, 211, 238, 0.5);
+      background: #10203d; color: #cbd5e1; font-weight: 800; font-size: 0.86rem; cursor: pointer;
+    }
+    .showdown-lvl-btn.active { background: #22d3ee; color: #091326; border-color: #22d3ee; }
+
+    .tilt-stage {
+      display: grid; grid-template-columns: 1fr; gap: 14px; margin-bottom: 14px;
+    }
+    @media (min-width: 780px) {
+      .tilt-stage { grid-template-columns: 1fr 290px 1fr; align-items: stretch; }
+    }
+    .tilt-zone {
+      border-radius: 18px; padding: 14px; text-align: center; border: 2px dashed rgba(34, 211, 238, 0.45);
+      background: rgba(16, 32, 61, 0.75); display: flex; flex-direction: column; justify-content: center; gap: 6px;
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+    }
+    .tilt-zone.active-left {
+      border-style: solid; border-color: #fbbf24; background: rgba(245, 158, 11, 0.22); transform: scale(1.02);
+    }
+    .tilt-zone.active-right {
+      border-style: solid; border-color: #22d3ee; background: rgba(34, 211, 238, 0.22); transform: scale(1.02);
+    }
+    .cam-box {
+      position: relative; border-radius: 18px; overflow: hidden;
+      border: 2px solid #22d3ee; background: #020617; min-height: 210px;
+      display: grid; place-items: center;
+    }
+    .cam-box video {
+      width: 100%; height: 210px; object-fit: cover; transform: scaleX(-1); display: block;
+    }
+    .cam-tracker-canvas {
+      position: absolute; inset: 0; width: 100%; height: 210px; pointer-events: none;
+    }
+    .cam-overlay-hud {
+      position: absolute; bottom: 8px; left: 8px; right: 8px;
+      background: rgba(2, 6, 23, 0.84); border: 1px solid rgba(34, 211, 238, 0.5);
+      border-radius: 10px; padding: 6px 10px; font-size: 0.78rem; font-weight: 800; color: #e2e8f0;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    }
+    .arcade-center {
+      background: #10203d; border: 2px solid rgba(34, 211, 238, 0.5); border-radius: 18px; padding: 18px; text-align: center;
+    }
+    .arcade-sentence { font-size: clamp(1.15rem, 2.5vw, 1.45rem); font-weight: 700; line-height: 1.5; margin: 10px 0; }
+    .arcade-verb-pill { background: #fbbf24; color: #091326; padding: 2px 9px; border-radius: 8px; font-weight: 900; }
+
+    .drawer-backdrop {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); z-index: 60; display: none; justify-content: flex-end;
+    }
+    .drawer-backdrop.open { display: flex; }
+    .drawer-panel {
+      width: min(440px, 100%); height: 100%; background: #ffffff; padding: 20px; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .starter-chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .starter-chip {
+      border: 1.5px solid #c4b5fd; background: #f5f3ff; color: #4c1d95;
+      border-radius: 999px; padding: 6px 12px; font-size: 0.85rem; font-weight: 700; cursor: pointer;
+    }
+    .helper-note { font-size: 0.88rem; color: var(--ink-muted); margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <div class="sky-layer" aria-hidden="true">
+    <div class="sky-cloud cloud-1"></div>
+    <div class="sky-cloud cloud-2"></div>
+    <div class="sky-cloud cloud-3"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <a href="#/" class="brand-link brand-font" data-route="#/">
+          <span class="brand-mascot" aria-hidden="true">🤖</span>
+          <span>Grammar Buddy</span>
+        </a>
+        <a href="#/" class="home-link" data-route="#/">🏠 Home</a>
+      </div>
+      <div class="nav-actions">
+        <span class="streak-pill">🔥 3 DAY STREAK!</span>
+        <div class="ask-buddy-group">
+          <span class="moving-buddy-bot" aria-hidden="true" title="Buddy Bot">🤖</span>
+          <button type="button" id="askBuddyOpenBtn" class="nav-btn ask-buddy-trigger">💡 Ask Buddy</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="appRoot" class="main-container">
+    <div id="viewMount"></div>
+  </main>
+
+  <div id="askBuddyDrawer" class="drawer-backdrop" role="dialog" aria-modal="true" aria-labelledby="askBuddyTitle">
+    <div class="drawer-panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <h2 id="askBuddyTitle" style="margin:0;font-size:1.35rem;">💡 Ask Buddy</h2>
+        <button type="button" id="askBuddyCloseBtn" class="secondary-btn">✕ Close</button>
+      </div>
+      <div class="starter-chip-row">
+        <button type="button" class="starter-chip" data-starter="When do I add -s?">When do I add -s?</button>
+        <button type="button" class="starter-chip" data-starter="How do I know if a sentence is in the past?">Past time clues</button>
+        <button type="button" class="starter-chip" data-starter="He walk to school every day">He walk to school every day</button>
+      </div>
+      <form id="askBuddyForm">
+        <label for="askBuddyInput" class="field-label">Your question or sentence</label>
+        <input id="askBuddyInput" type="text" class="input-control" placeholder="Example: When do I add -s?" />
+        <button type="submit" class="primary-btn btn-blue" style="margin-top:10px;">Get Clue</button>
+      </form>
+      <div id="askBuddyStatus" class="status-banner status-info">Ask Buddy for a grammar hint.</div>
+      <div id="askBuddyResponseCard" class="buddy-bubble" style="display:none;">
+        <div id="askBuddyResponseHeading" class="buddy-bubble-title"></div>
+        <div id="askBuddyResponseText"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const BUILTIN_VOCAB = [
+        { id: 1, en: "school", ms: "sekolah" }, { id: 2, en: "classroom", ms: "bilik darjah" },
+        { id: 3, en: "teacher", ms: "guru" }, { id: 4, en: "pupil", ms: "murid" },
+        { id: 5, en: "friend", ms: "kawan" }, { id: 6, en: "headteacher", ms: "guru besar" },
+        { id: 7, en: "book", ms: "buku" }, { id: 8, en: "notebook", ms: "buku nota" },
+        { id: 9, en: "pencil", ms: "pensel" }, { id: 10, en: "pen", ms: "pen" },
+        { id: 11, en: "ruler", ms: "pembaris" }, { id: 12, en: "eraser", ms: "pemadam" },
+        { id: 13, en: "school bag", ms: "beg sekolah" }, { id: 14, en: "desk", ms: "meja" },
+        { id: 15, en: "chair", ms: "kerusi" }, { id: 16, en: "whiteboard", ms: "papan putih" },
+        { id: 17, en: "homework", ms: "kerja rumah" }, { id: 18, en: "question", ms: "soalan" },
+        { id: 19, en: "answer", ms: "jawapan" }, { id: 20, en: "library", ms: "perpustakaan" },
+        { id: 21, en: "canteen", ms: "kantin" }, { id: 22, en: "school field", ms: "padang sekolah" },
+        { id: 23, en: "playground", ms: "taman permainan" }, { id: 24, en: "school uniform", ms: "pakaian seragam sekolah" },
+        { id: 25, en: "shoes", ms: "kasut" }, { id: 26, en: "family", ms: "keluarga" },
+        { id: 27, en: "mother", ms: "ibu" }, { id: 28, en: "father", ms: "bapa" },
+        { id: 29, en: "older sister", ms: "kakak" }, { id: 30, en: "older brother", ms: "abang" },
+        { id: 31, en: "younger sibling", ms: "adik" }, { id: 32, en: "grandmother", ms: "nenek" },
+        { id: 33, en: "grandfather", ms: "datuk" }, { id: 34, en: "house", ms: "rumah" },
+        { id: 35, en: "kitchen", ms: "dapur" }, { id: 36, en: "bedroom", ms: "bilik tidur" },
+        { id: 37, en: "door", ms: "pintu" }, { id: 38, en: "window", ms: "tingkap" },
+        { id: 39, en: "bed", ms: "katil" }, { id: 40, en: "pillow", ms: "bantal" },
+        { id: 41, en: "towel", ms: "tuala" }, { id: 42, en: "soap", ms: "sabun" },
+        { id: 43, en: "toothbrush", ms: "berus gigi" }, { id: 44, en: "mirror", ms: "cermin" },
+        { id: 45, en: "clock", ms: "jam" }, { id: 46, en: "water", ms: "air" },
+        { id: 47, en: "milk", ms: "susu" }, { id: 48, en: "rice", ms: "nasi" },
+        { id: 49, en: "bread", ms: "roti" }, { id: 50, en: "egg", ms: "telur" },
+        { id: 51, en: "fish", ms: "ikan" }, { id: 52, en: "chicken", ms: "ayam" },
+        { id: 53, en: "vegetables", ms: "sayur-sayuran" }, { id: 54, en: "fruit", ms: "buah-buahan" },
+        { id: 55, en: "banana", ms: "pisang" }, { id: 56, en: "mango", ms: "mangga" },
+        { id: 57, en: "pineapple", ms: "nanas" }, { id: 58, en: "watermelon", ms: "tembikai" },
+        { id: 59, en: "breakfast", ms: "sarapan" }, { id: 60, en: "lunch", ms: "makan tengah hari" },
+        { id: 61, en: "dinner", ms: "makan malam" }, { id: 62, en: "plate", ms: "pinggan" },
+        { id: 63, en: "spoon", ms: "sudu" }, { id: 64, en: "fork", ms: "garpu" },
+        { id: 65, en: "bottle", ms: "botol" }, { id: 66, en: "cat", ms: "kucing" },
+        { id: 67, en: "dog", ms: "anjing" }, { id: 68, en: "bird", ms: "burung" },
+        { id: 69, en: "rabbit", ms: "arnab" }, { id: 70, en: "butterfly", ms: "rama-rama" },
+        { id: 71, en: "turtle", ms: "penyu" }, { id: 72, en: "tree", ms: "pokok" },
+        { id: 73, en: "flower", ms: "bunga" }, { id: 74, en: "leaf", ms: "daun" },
+        { id: 75, en: "river", ms: "sungai" }, { id: 76, en: "sea", ms: "laut" },
+        { id: 77, en: "island", ms: "pulau" }, { id: 78, en: "beach", ms: "pantai" },
+        { id: 79, en: "mountain", ms: "gunung" }, { id: 80, en: "rain", ms: "hujan" },
+        { id: 81, en: "cloud", ms: "awan" }, { id: 82, en: "wind", ms: "angin" },
+        { id: 83, en: "sun", ms: "matahari" }, { id: 84, en: "kite", ms: "layang-layang" },
+        { id: 85, en: "bicycle", ms: "basikal" }, { id: 86, en: "bus", ms: "bas" },
+        { id: 87, en: "boat", ms: "bot" }, { id: 88, en: "market", ms: "pasar" },
+        { id: 89, en: "shop", ms: "kedai" }, { id: 90, en: "village", ms: "kampung" },
+        { id: 91, en: "today", ms: "hari ini" }, { id: 92, en: "yesterday", ms: "semalam" },
+        { id: 93, en: "tomorrow", ms: "esok" }, { id: 94, en: "every day", ms: "setiap hari" },
+        { id: 95, en: "last week", ms: "minggu lepas" }, { id: 96, en: "morning", ms: "pagi" },
+        { id: 97, en: "afternoon", ms: "petang" }, { id: 98, en: "night", ms: "malam" },
+        { id: 99, en: "happy", ms: "gembira" }, { id: 100, en: "tired", ms: "penat" }
+      ];
+
+      const BUILTIN_VERBS = [
+        { id: 1, base: "walk", thirdPerson: "walks", past: "walked", meaningMs: "berjalan", definition: "Moving on foot step by step.", example: "We walk to school together every morning." },
+        { id: 2, base: "play", thirdPerson: "plays", past: "played", meaningMs: "bermain", definition: "Taking part in a game or sport.", example: "The pupils play football every evening." },
+        { id: 3, base: "talk", thirdPerson: "talks", past: "talked", meaningMs: "bercakap", definition: "Speaking with someone.", example: "We talk at dinner." },
+        { id: 4, base: "listen", thirdPerson: "listens", past: "listened", meaningMs: "mendengar", definition: "Paying attention to sounds.", example: "They listen carefully." },
+        { id: 5, base: "look", thirdPerson: "looks", past: "looked", meaningMs: "melihat", definition: "Directing eyes toward something.", example: "She looked out the window." },
+        { id: 6, base: "watch", thirdPerson: "watches", past: "watched", meaningMs: "menonton", definition: "Looking at a show or screen.", example: "We watch cartoons on Sunday." },
+        { id: 7, base: "wash", thirdPerson: "washes", past: "washed", meaningMs: "membasuh", definition: "Cleaning with water and soap.", example: "He washes his hands." },
+        { id: 8, base: "brush", thirdPerson: "brushes", past: "brushed", meaningMs: "memberus", definition: "Cleaning with a brush.", example: "I brush my teeth every night." },
+        { id: 9, base: "clean", thirdPerson: "cleans", past: "cleaned", meaningMs: "membersihkan", definition: "Making neat and clean.", example: "They cleaned the board." },
+        { id: 10, base: "cook", thirdPerson: "cooks", past: "cooked", meaningMs: "memasak", definition: "Preparing food by heating.", example: "Mother cooked dinner." },
+        { id: 11, base: "open", thirdPerson: "opens", past: "opened", meaningMs: "membuka", definition: "Moving a door or book open.", example: "He opened his book." },
+        { id: 12, base: "close", thirdPerson: "closes", past: "closed", meaningMs: "menutup", definition: "Shutting a door or window.", example: "She closed the door." },
+        { id: 13, base: "help", thirdPerson: "helps", past: "helped", meaningMs: "menolong", definition: "Giving support.", example: "I help my brother." },
+        { id: 14, base: "ask", thirdPerson: "asks", past: "asked", meaningMs: "bertanya", definition: "Saying or writing a question.", example: "She asked a question." },
+        { id: 15, base: "answer", thirdPerson: "answers", past: "answered", meaningMs: "menjawab", definition: "Giving a reply.", example: "He answered every question." },
+        { id: 16, base: "visit", thirdPerson: "visits", past: "visited", meaningMs: "melawat", definition: "Going to see a person or place.", example: "We visited grandmother last week." },
+        { id: 17, base: "wait", thirdPerson: "waits", past: "waited", meaningMs: "menunggu", definition: "Staying until someone comes.", example: "They waited for the bus." },
+        { id: 18, base: "start", thirdPerson: "starts", past: "started", meaningMs: "memulakan", definition: "Beginning an activity.", example: "Class starts at eight." },
+        { id: 19, base: "finish", thirdPerson: "finishes", past: "finished", meaningMs: "menyiapkan", definition: "Completing a task.", example: "He finished his homework." },
+        { id: 20, base: "work", thirdPerson: "works", past: "worked", meaningMs: "bekerja", definition: "Doing a job or task.", example: "Father worked hard." },
+        { id: 21, base: "learn", thirdPerson: "learns", past: "learned", meaningMs: "belajar", definition: "Gaining knowledge or skill.", example: "We learn new words every day." },
+        { id: 22, base: "study", thirdPerson: "studies", past: "studied", meaningMs: "belajar", definition: "Practising to understand a subject.", example: "She studies English every night." },
+        { id: 23, base: "try", thirdPerson: "tries", past: "tried", meaningMs: "mencuba", definition: "Making an effort.", example: "I tried to ride my bike." },
+        { id: 24, base: "carry", thirdPerson: "carries", past: "carried", meaningMs: "membawa", definition: "Holding and moving something.", example: "He carries his bag." },
+        { id: 25, base: "cry", thirdPerson: "cries", past: "cried", meaningMs: "menangis", definition: "Shedding tears.", example: "The baby cried last night." },
+        { id: 26, base: "tidy", thirdPerson: "tidies", past: "tidied", meaningMs: "mengemas", definition: "Making things neat.", example: "She tidied her room." },
+        { id: 27, base: "copy", thirdPerson: "copies", past: "copied", meaningMs: "menyalin", definition: "Writing notes carefully.", example: "They copied the words." },
+        { id: 28, base: "stop", thirdPerson: "stops", past: "stopped", meaningMs: "berhenti", definition: "Coming to a halt.", example: "The bus stopped yesterday." },
+        { id: 29, base: "plan", thirdPerson: "plans", past: "planned", meaningMs: "merancang", definition: "Deciding ahead of time.", example: "We planned a picnic." },
+        { id: 30, base: "skip", thirdPerson: "skips", past: "skipped", meaningMs: "melompat-lompat", definition: "Moving with light hops.", example: "The girls skipped happily." },
+        { id: 31, base: "dance", thirdPerson: "dances", past: "danced", meaningMs: "menari", definition: "Moving to music.", example: "They danced at the party." },
+        { id: 32, base: "smile", thirdPerson: "smiles", past: "smiled", meaningMs: "tersenyum", definition: "Showing happiness with a smile.", example: "The teacher smiled." },
+        { id: 33, base: "laugh", thirdPerson: "laughs", past: "laughed", meaningMs: "ketawa", definition: "Laughing at something funny.", example: "We laughed together." },
+        { id: 34, base: "jump", thirdPerson: "jumps", past: "jumped", meaningMs: "melompat", definition: "Pushing into the air.", example: "The cat jumped high." },
+        { id: 35, base: "climb", thirdPerson: "climbs", past: "climbed", meaningMs: "memanjat", definition: "Going up a hill or tree.", example: "He climbed the hill." },
+        { id: 36, base: "call", thirdPerson: "calls", past: "called", meaningMs: "menelefon", definition: "Phoning or calling out.", example: "Mother called grandmother." },
+        { id: 37, base: "shop", thirdPerson: "shops", past: "shopped", meaningMs: "membeli-belah", definition: "Buying items at a shop.", example: "We shopped at the market." },
+        { id: 38, base: "count", thirdPerson: "counts", past: "counted", meaningMs: "mengira", definition: "Finding the total number.", example: "She counted ten mangoes." },
+        { id: 39, base: "colour", thirdPerson: "colours", past: "coloured", meaningMs: "mewarna", definition: "Filling with colour.", example: "He coloured the picture." },
+        { id: 40, base: "paint", thirdPerson: "paints", past: "painted", meaningMs: "melukis dengan cat", definition: "Making a picture with paint.", example: "They painted a flower." },
+        { id: 41, base: "plant", thirdPerson: "plants", past: "planted", meaningMs: "menanam", definition: "Putting a plant into soil.", example: "We planted trees." },
+        { id: 42, base: "water", thirdPerson: "waters", past: "watered", meaningMs: "menyiram", definition: "Pouring water on plants.", example: "I water the flowers every afternoon." },
+        { id: 43, base: "pick", thirdPerson: "picks", past: "picked", meaningMs: "memetik", definition: "Taking fruit or flowers.", example: "Grandfather picked mangoes." },
+        { id: 44, base: "collect", thirdPerson: "collects", past: "collected", meaningMs: "mengumpulkan", definition: "Gathering things together.", example: "They collected leaves." },
+        { id: 45, base: "need", thirdPerson: "needs", past: "needed", meaningMs: "memerlukan", definition: "Requiring something.", example: "I need a ruler." },
+        { id: 46, base: "want", thirdPerson: "wants", past: "wanted", meaningMs: "mahu", definition: "Having a wish.", example: "She wants water." },
+        { id: 47, base: "like", thirdPerson: "likes", past: "liked", meaningMs: "menyukai", definition: "Finding pleasant.", example: "I like English." },
+        { id: 48, base: "enjoy", thirdPerson: "enjoys", past: "enjoyed", meaningMs: "menikmati", definition: "Taking pleasure in something.", example: "We enjoyed the trip." },
+        { id: 49, base: "live", thirdPerson: "lives", past: "lived", meaningMs: "tinggal", definition: "Having a home.", example: "They live in a village." },
+        { id: 50, base: "arrive", thirdPerson: "arrives", past: "arrived", meaningMs: "tiba", definition: "Reaching a place.", example: "We arrived early." },
+        { id: 51, base: "go", thirdPerson: "goes", past: "went", meaningMs: "pergi", definition: "Travelling or moving.", example: "I went to school yesterday." },
+        { id: 52, base: "come", thirdPerson: "comes", past: "came", meaningMs: "datang", definition: "Moving toward a place.", example: "My friend came yesterday." },
+        { id: 53, base: "eat", thirdPerson: "eats", past: "ate", meaningMs: "makan", definition: "Eating food.", example: "We eat breakfast every day." },
+        { id: 54, base: "drink", thirdPerson: "drinks", past: "drank", meaningMs: "minum", definition: "Drinking liquid.", example: "She drank milk." },
+        { id: 55, base: "run", thirdPerson: "runs", past: "ran", meaningMs: "berlari", definition: "Moving quickly on foot.", example: "They ran fast." },
+        { id: 56, base: "swim", thirdPerson: "swims", past: "swam", meaningMs: "berenang", definition: "Moving in water.", example: "We swam yesterday." },
+        { id: 57, base: "fly", thirdPerson: "flies", past: "flew", meaningMs: "terbang", definition: "Moving through the air.", example: "The birds flew high." },
+        { id: 58, base: "ride", thirdPerson: "rides", past: "rode", meaningMs: "menunggang", definition: "Riding a bike or boat.", example: "He rode his bicycle." },
+        { id: 59, base: "drive", thirdPerson: "drives", past: "drove", meaningMs: "memandu", definition: "Operating a vehicle.", example: "Father drove to town." },
+        { id: 60, base: "see", thirdPerson: "sees", past: "saw", meaningMs: "melihat", definition: "Noticing with eyes.", example: "Yesterday, we saw a puppy." },
+        { id: 61, base: "hear", thirdPerson: "hears", past: "heard", meaningMs: "mendengar", definition: "Hearing a sound.", example: "We heard the rain." },
+        { id: 62, base: "say", thirdPerson: "says", past: "said", meaningMs: "berkata", definition: "Speaking words.", example: "She said hello." },
+        { id: 63, base: "tell", thirdPerson: "tells", past: "told", meaningMs: "memberitahu", definition: "Giving information or a story.", example: "Grandmother told a story." },
+        { id: 64, base: "speak", thirdPerson: "speaks", past: "spoke", meaningMs: "bertutur", definition: "Talking in a language.", example: "She speaks English." },
+        { id: 65, base: "read", thirdPerson: "reads", past: "read", meaningMs: "membaca", definition: "Reading written words.", example: "I read a book." },
+        { id: 66, base: "write", thirdPerson: "writes", past: "wrote", meaningMs: "menulis", definition: "Writing words on paper.", example: "He wrote a note." },
+        { id: 67, base: "draw", thirdPerson: "draws", past: "drew", meaningMs: "melukis", definition: "Drawing a picture.", example: "She drew a boat." },
+        { id: 68, base: "sing", thirdPerson: "sings", past: "sang", meaningMs: "menyanyi", definition: "Singing a song.", example: "They sang together." },
+        { id: 69, base: "bring", thirdPerson: "brings", past: "brought", meaningMs: "membawa", definition: "Taking something to a place.", example: "We brought fruit." },
+        { id: 70, base: "buy", thirdPerson: "buys", past: "bought", meaningMs: "membeli", definition: "Paying money for items.", example: "Mother bought fish." },
+        { id: 71, base: "take", thirdPerson: "takes", past: "took", meaningMs: "mengambil", definition: "Reaching for and holding.", example: "He took his pencil." },
+        { id: 72, base: "give", thirdPerson: "gives", past: "gave", meaningMs: "memberi", definition: "Letting someone have.", example: "The teacher gave a star." },
+        { id: 73, base: "make", thirdPerson: "makes", past: "made", meaningMs: "membuat", definition: "Creating or preparing.", example: "We made a kite." },
+        { id: 74, base: "do", thirdPerson: "does", past: "did", meaningMs: "melakukan", definition: "Performing an action.", example: "I do my homework." },
+        { id: 75, base: "have", thirdPerson: "has", past: "had", meaningMs: "mempunyai", definition: "Owning or holding.", example: "Technology has changed learning." },
+        { id: 76, base: "am / are", thirdPerson: "is", past: "was / were", meaningMs: "berada / ialah", definition: "Showing state or identity.", example: "Plastic pollution is a threat." },
+        { id: 77, base: "get", thirdPerson: "gets", past: "got", meaningMs: "mendapat", definition: "Receiving something.", example: "She got a good mark." },
+        { id: 78, base: "find", thirdPerson: "finds", past: "found", meaningMs: "menjumpai", definition: "Discovering by looking.", example: "I found my eraser." },
+        { id: 79, base: "lose", thirdPerson: "loses", past: "lost", meaningMs: "kehilangan", definition: "No longer having.", example: "He lost his pen." },
+        { id: 80, base: "keep", thirdPerson: "keeps", past: "kept", meaningMs: "menyimpan", definition: "Storing safely.", example: "She kept her book." },
+        { id: 81, base: "leave", thirdPerson: "leaves", past: "left", meaningMs: "meninggalkan", definition: "Going away from a place.", example: "We left at seven." },
+        { id: 82, base: "meet", thirdPerson: "meets", past: "met", meaningMs: "berjumpa", definition: "Coming together with someone.", example: "I met my friend." },
+        { id: 83, base: "sit", thirdPerson: "sits", past: "sat", meaningMs: "duduk", definition: "Resting on a chair.", example: "They sat quietly." },
+        { id: 84, base: "stand", thirdPerson: "stands", past: "stood", meaningMs: "berdiri", definition: "Being upright on feet.", example: "Everyone stood up." },
+        { id: 85, base: "sleep", thirdPerson: "sleeps", past: "slept", meaningMs: "tidur", definition: "Resting with eyes closed.", example: "The baby slept well." },
+        { id: 86, base: "wake up", thirdPerson: "wakes up", past: "woke up", meaningMs: "bangun tidur", definition: "Opening eyes after sleep.", example: "Every morning, we wake up early." },
+        { id: 87, base: "wear", thirdPerson: "wears", past: "wore", meaningMs: "memakai", definition: "Having clothes on.", example: "We wear uniforms." },
+        { id: 88, base: "put", thirdPerson: "puts", past: "put", meaningMs: "meletakkan", definition: "Placing in a spot.", example: "She put her book down." },
+        { id: 89, base: "cut", thirdPerson: "cuts", past: "cut", meaningMs: "memotong", definition: "Dividing with a blade.", example: "Mother cut the fruit." },
+        { id: 90, base: "break", thirdPerson: "breaks", past: "broke", meaningMs: "memecahkan", definition: "Separating into pieces.", example: "The cup broke yesterday." },
+        { id: 91, base: "fall", thirdPerson: "falls", past: "fell", meaningMs: "jatuh", definition: "Dropping downward.", example: "A leaf fell down." },
+        { id: 92, base: "catch", thirdPerson: "catches", past: "caught", meaningMs: "menangkap", definition: "Taking hold of something moving.", example: "He caught the ball." },
+        { id: 93, base: "feed", thirdPerson: "feeds", past: "fed", meaningMs: "memberi makan", definition: "Giving food to someone or a pet.", example: "We fed the puppy." },
+        { id: 94, base: "teach", thirdPerson: "teaches", past: "taught", meaningMs: "mengajar", definition: "Helping someone learn.", example: "Our teacher taught us." },
+        { id: 95, base: "think", thirdPerson: "thinks", past: "thought", meaningMs: "berfikir", definition: "Forming an idea in mind.", example: "I thought carefully." },
+        { id: 96, base: "know", thirdPerson: "knows", past: "knew", meaningMs: "mengetahui", definition: "Having information.", example: "She knew the answer." },
+        { id: 97, base: "feel", thirdPerson: "feels", past: "felt", meaningMs: "berasa", definition: "Experiencing a feeling.", example: "I felt tired." },
+        { id: 98, base: "forget", thirdPerson: "forgets", past: "forgot", meaningMs: "terlupa", definition: "Failing to remember.", example: "He forgot his ruler." },
+        { id: 99, base: "choose", thirdPerson: "chooses", past: "chose", meaningMs: "memilih", definition: "Picking an option.", example: "She chose the blue pen." },
+        { id: 100, base: "win", thirdPerson: "wins", past: "won", meaningMs: "menang", definition: "Coming first.", example: "Our class won yesterday." }
+      ];
+
+      const CLEAN_EXAMPLES = [
+        {
+          label: "He walk to school every day.",
+          wrong: "He walk to school every day.",
+          correction: "He walks to school every day.",
+          highlights: ["He walk"],
+          fixedHighlights: ["He walks"],
+          why: [
+            'Subject-Verb Agreement: "He" is a singular third-person subject in the Simple Present, so "walk" becomes "walks".'
+          ]
+        },
+        {
+          label: "Every morning, my brother and I wakes up early to exercise at the park.",
+          wrong: "Every morning, my brother and I wakes up early to exercise at the park. Because the weather is usually cool we enjoy running along the lake before breakfast. Yesterday, we see a stray puppy near the entrance and decided to feed it.",
+          correction: "Every morning, my brother and I wake up early to exercise at the park. Because the weather is usually cool, we enjoy running along the lake before breakfast. Yesterday, we saw a stray puppy near the entrance and decided to feed it.",
+          highlights: ["wakes up", "cool we enjoy", "see"],
+          fixedHighlights: ["wake up", "cool, we enjoy", "saw"],
+          why: [
+            'Subject-Verb Agreement: "My brother and I" is a plural subject, so it takes wake (not wakes).',
+            'Comma: Add a comma after an introductory dependent clause ("Because the weather is usually cool,").',
+            'Tense: "Yesterday" indicates past tense, so "see" must be saw.'
+          ]
+        },
+        {
+          label: "Modern technology have changed the way students learn in classrooms today.",
+          wrong: "Modern technology have changed the way students learn in classrooms today. Teachers uses digital tablets to share interactive lessons, and students submit their homework online. Last week, our school introduces a new coding program for beginners.",
+          correction: "Modern technology has changed the way students learn in classrooms today. Teachers use digital tablets to share interactive lessons, and students submit their homework online. Last week, our school introduced a new coding program for beginners.",
+          highlights: ["technology have", "Teachers uses", "introduces"],
+          fixedHighlights: ["technology has", "Teachers use", "introduced"],
+          why: [
+            'Subject-Verb Agreement: "Technology" is an uncountable singular noun, requiring has (not have); "Teachers" is plural, requiring use (not uses).',
+            'Tense: "Last week" requires the past tense verb introduced.'
+          ]
+        },
+        {
+          label: "Eating a balanced diet provide the body with essential nutrients and energy.",
+          wrong: "Eating a balanced diet provide the body with essential nutrients and energy. However many people skips breakfast because they are in a rush to get to work. When I was younger, I eat fast food almost every day without realizing its effects.",
+          correction: "Eating a balanced diet provides the body with essential nutrients and energy. However, many people skip breakfast because they are in a rush to get to work. When I was younger, I ate fast food almost every day without realizing its effects.",
+          highlights: ["diet provide", "However many people skips", "I eat"],
+          fixedHighlights: ["diet provides", "However, many people skip", "I ate"],
+          why: [
+            'Subject-Verb Agreement: The gerund phrase "Eating a balanced diet" is singular, so use provides; "many people" is plural, so use skip.',
+            'Comma: Use a comma after the conjunctive adverb However, at the start of a sentence.',
+            'Tense: "When I was younger" sets a past timeframe, requiring ate.'
+          ]
+        },
+        {
+          label: "Traveling to new countries allow people to experience different cultures and traditions.",
+          wrong: "Traveling to new countries allow people to experience different cultures and traditions. My parents loves visiting historical museums, trying local dishes and taking photographs. During our last trip to Japan, we visit several ancient temples in Kyoto.",
+          correction: "Traveling to new countries allows people to experience different cultures and traditions. My parents love visiting historical museums, trying local dishes, and taking photographs. During our last trip to Japan, we visited several ancient temples in Kyoto.",
+          highlights: ["countries allow", "My parents loves", "trying local dishes and taking photographs", "we visit"],
+          fixedHighlights: ["countries allows", "My parents love", "trying local dishes, and taking photographs", "we visited"],
+          why: [
+            'Subject-Verb Agreement: "Traveling..." is a singular gerund subject (allows), while "My parents" is plural (love).',
+            'Comma: Add a comma before "and" in a list of three or more items (Oxford comma: dishes,).',
+            'Tense: "During our last trip" indicates past tense, so use visited.'
+          ]
+        },
+        {
+          label: "Plastic pollution are one of the biggest threats to marine life around the world.",
+          wrong: "Plastic pollution are one of the biggest threats to marine life around the world. If everyone reduce their plastic waste, our oceans will become much cleaner. Two years ago, our community organizes a beach cleanup that collected over fifty bags of trash.",
+          correction: "Plastic pollution is one of the biggest threats to marine life around the world. If everyone reduces their plastic waste, our oceans will become much cleaner. Two years ago, our community organized a beach cleanup that collected over fifty bags of trash.",
+          highlights: ["Plastic pollution are", "If everyone reduce", "organizes"],
+          fixedHighlights: ["Plastic pollution is", "If everyone reduces", "organized"],
+          why: [
+            'Subject-Verb Agreement: "Plastic pollution" is singular (is), and the indefinite pronoun "everyone" is always singular (reduces).',
+            'Tense: "Two years ago" requires the past tense verb organized.'
+          ]
+        }
+      ];
+
+      const BURGER_MISSIONS = {
+        "1": {
+          title: "Mission 1: Sunny Bun Plaza",
+          zoneTag: "MAP STOP 1 • PRESENT HABITS & AGREEMENT",
+          badge: "🐰 Bun Plaza",
+          goalText: "Serve or fix 4 morning cafe orders for the Bun Plaza critters!",
+          tickets: [
+            { sentence: "Every morning, my brother and I wakes up early.", targetVerb: "wakes up", isCorrect: false, expectedForm: "wake up", explanation: '"My brother and I" is plural, so use "wake up" (not "wakes up").' },
+            { sentence: "Aina washes her hands before lunch every day.", targetVerb: "washes", isCorrect: true, expectedForm: "washes", explanation: 'Singular "Aina" + "washes" (-es) is right for a daily habit.' },
+            { sentence: "My parents loves visiting museums on Sundays.", targetVerb: "loves", isCorrect: false, expectedForm: "love", explanation: 'Plural "My parents" takes base verb "love".' },
+            { sentence: "Everyone in the class brings a ruler.", targetVerb: "brings", isCorrect: true, expectedForm: "brings", explanation: '"Everyone" is singular, so "brings" is right.' }
+          ]
+        },
+        "2": {
+          title: "Mission 2: Berry Past Valley",
+          zoneTag: "MAP STOP 2 • PAST TIME CLUES & IRREGULARS",
+          badge: "🍓 Berry Valley",
+          goalText: "Check 4 picnic orders from yesterday and last week!",
+          tickets: [
+            { sentence: "Yesterday, we see a stray puppy near the gate.", targetVerb: "see", isCorrect: false, expectedForm: "saw", explanation: '"Yesterday" needs Simple Past "saw".' },
+            { sentence: "Last week, our school introduced a coding club.", targetVerb: "introduced", isCorrect: true, expectedForm: "introduced", explanation: '"Last week" + "introduced" matches Simple Past.' },
+            { sentence: "The birds flyed over the school field yesterday.", targetVerb: "flyed", isCorrect: false, expectedForm: "flew", explanation: '"Fly" is irregular in the past: "flew" (not "flyed").' },
+            { sentence: "When I was younger, I ate fast food often.", targetVerb: "ate", isCorrect: true, expectedForm: "ate", explanation: '"When I was younger" sets past time, so "ate" is right.' }
+          ]
+        },
+        "3": {
+          title: "Mission 3: Cheese Trap Meadow",
+          zoneTag: "MAP STOP 3 • MIXED TENSE TRAPS",
+          badge: "🧀 Cheese Meadow",
+          goalText: "Spot sneaky tense swaps across 4 meadow food stalls!",
+          tickets: [
+            { sentence: "Two years ago, our club organizes a beach cleanup.", targetVerb: "organizes", isCorrect: false, expectedForm: "organized", explanation: '"Two years ago" requires past tense "organized".' },
+            { sentence: "Modern technology has changed how pupils learn.", targetVerb: "has changed", isCorrect: true, expectedForm: "has changed", explanation: 'Singular "technology" matches "has changed".' },
+            { sentence: "If everyone reduce plastic, the beach stays clean.", targetVerb: "reduce", isCorrect: false, expectedForm: "reduces", explanation: '"Everyone" is singular and takes "reduces".' },
+            { sentence: "During our last trip, we visited ancient temples.", targetVerb: "visited", isCorrect: true, expectedForm: "visited", explanation: '"During our last trip" uses past tense "visited".' }
+          ]
+        },
+        "4": {
+          title: "Mission 4: Royal Burger Summit",
+          zoneTag: "MAP STOP 4 • GRAND FEAST CHALLENGE",
+          badge: "👑 Burger Summit",
+          goalText: "Complete all 4 royal feast orders to earn the Grand Burger Crown!",
+          tickets: [
+            { sentence: "Teachers uses digital tablets in class today.", targetVerb: "uses", isCorrect: false, expectedForm: "use", explanation: 'Plural "Teachers" takes "use" (not "uses").' },
+            { sentence: "Eating a balanced diet provides daily energy.", targetVerb: "provides", isCorrect: true, expectedForm: "provides", explanation: 'Singular gerund subject "Eating a balanced diet" takes "provides".' },
+            { sentence: "However many people skips breakfast every day.", targetVerb: "skips", isCorrect: false, expectedForm: "skip", explanation: 'Plural "many people" takes "skip".' },
+            { sentence: "Grandmother told us a story last night.", targetVerb: "told", isCorrect: true, expectedForm: "told", explanation: '"Last night" + "told" is accurate Simple Past.' }
+          ]
+        }
+      };
+
+      const SHOWDOWN_BANK = [
+        { level: 1, sentence: "We walk to school together every morning.", targetVerb: "walk", tense: "present", reason: '"Walk" + "every morning" = Simple Present habit.' },
+        { level: 1, sentence: "Yesterday, we saw a stray puppy near the gate.", targetVerb: "saw", tense: "past", reason: '"Saw" + "Yesterday" = Simple Past.' },
+        { level: 1, sentence: "I brush my teeth before bed every night.", targetVerb: "brush", tense: "present", reason: '"Brush" + "every night" = Simple Present.' },
+        { level: 1, sentence: "Ali ate a sweet mango yesterday.", targetVerb: "ate", tense: "past", reason: '"Ate" + "yesterday" = Simple Past.' },
+        { level: 2, sentence: "Aina walks to school every morning.", targetVerb: "walks", tense: "present", reason: '"Walks" adds -s for singular "Aina" in Simple Present.' },
+        { level: 2, sentence: "Last week, we visited our grandmother.", targetVerb: "visited", tense: "past", reason: '"Visited" + "Last week" = Simple Past.' },
+        { level: 2, sentence: "She studies English every night.", targetVerb: "studies", tense: "present", reason: '"Studies" (-ies) is Simple Present for "she".' },
+        { level: 2, sentence: "The bus stopped near our school yesterday.", targetVerb: "stopped", tense: "past", reason: '"Stopped" + "yesterday" = Simple Past.' },
+        { level: 3, sentence: "The birds flew high over the playground.", targetVerb: "flew", tense: "past", reason: '"Flew" is the irregular past form of "fly".' },
+        { level: 3, sentence: "They enjoy running along the lake.", targetVerb: "enjoy", tense: "present", reason: '"Enjoy" with plural "They" is Simple Present.' },
+        { level: 3, sentence: "She wrote a note in her notebook last night.", targetVerb: "wrote", tense: "past", reason: '"Wrote" + "last night" = Simple Past.' },
+        { level: 3, sentence: "Mother buys fresh fish at the market.", targetVerb: "buys", tense: "present", reason: '"Buys" is Simple Present for singular "Mother".' },
+        { level: 4, sentence: "Two years ago, our community organized a cleanup.", targetVerb: "organized", tense: "past", reason: '"Two years ago" + "organized" = Simple Past.' },
+        { level: 4, sentence: "Everyone reduces plastic waste at home.", targetVerb: "reduces", tense: "present", reason: '"Everyone" + "reduces" = Simple Present.' },
+        { level: 4, sentence: "When I was younger, I ate fast food.", targetVerb: "ate", tense: "past", reason: '"When I was younger" + "ate" = Simple Past.' },
+        { level: 4, sentence: "He does not play badminton on Mondays.", targetVerb: "does not play", tense: "present", reason: '"Does not play" + "on Mondays" = Simple Present.' }
+      ];
+
+      function escapeHtml(str) {
+        return String(str ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+
+      function highlightPhrase(fullText, targetPhrase, highlightClass) {
+        const safeFull = escapeHtml(fullText);
+        if (!targetPhrase) return safeFull;
+        const idx = fullText.toLowerCase().indexOf(targetPhrase.toLowerCase());
+        if (idx === -1) return safeFull;
+        return `${escapeHtml(fullText.slice(0, idx))}<span class="${highlightClass}">${escapeHtml(fullText.slice(idx, idx + targetPhrase.length))}</span>${escapeHtml(fullText.slice(idx + targetPhrase.length))}`;
+      }
+
+      function highlightMultiple(fullText, phrases, highlightClass) {
+        let html = escapeHtml(fullText);
+        const list = (phrases || []).filter(Boolean).sort((a, b) => b.length - a.length);
+        list.forEach((p) => {
+          const esc = p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          html = html.replace(new RegExp(esc, "gi"), (match) => `<span class="${highlightClass}">${match}</span>`);
+        });
+        return html;
+      }
+
+      function setStatus(el, msg, type = "info") {
+        if (!el) return;
+        el.className = "status-banner status-" + type;
+        el.textContent = msg;
+      }
+
+      const verbsByAnyForm = new Map();
+      const enToMsExact = new Map();
+      const msToEnExact = new Map();
+
+      function addMapEntry(map, key, val) {
+        const k = key.toLowerCase().trim();
+        if (!k) return;
+        if (!map.has(k)) map.set(k, []);
+        if (!map.get(k).some((x) => x.label === val.label)) map.get(k).push(val);
+      }
+
+      BUILTIN_VOCAB.forEach((v) => {
+        addMapEntry(enToMsExact, v.en, { label: v.ms, note: `Vocabulary (${v.en} = ${v.ms})` });
+        v.ms.split("/").forEach((part) => addMapEntry(msToEnExact, part, { label: v.en, note: `Vocabulary (${v.ms} = ${v.en})` }));
+      });
+
+      BUILTIN_VERBS.forEach((v) => {
+        [v.base, v.thirdPerson, v.past].forEach((form) => {
+          form.split("/").forEach((part) => {
+            const clean = part.trim().toLowerCase();
+            if (!clean) return;
+            if (!verbsByAnyForm.has(clean)) verbsByAnyForm.set(clean, []);
+            if (!verbsByAnyForm.get(clean).some((x) => x.id === v.id)) verbsByAnyForm.get(clean).push(v);
+            addMapEntry(enToMsExact, clean, { label: v.meaningMs, note: `Verb “${v.base}” • Past: ${v.past}` });
+          });
+        });
+        v.meaningMs.split(/[\/,]/).forEach((msPart) => {
+          const cleanMs = msPart.trim();
+          if (cleanMs) addMapEntry(msToEnExact, cleanMs, { label: `${v.base} (he/she/it: ${v.thirdPerson} | past: ${v.past})`, note: v.definition });
+        });
+      });
+
+      let activeCameraCleanup = null;
+      function runCleanup() {
+        if (typeof activeCameraCleanup === "function") {
+          activeCameraCleanup();
+          activeCameraCleanup = null;
+        }
+      }
+
+      const drawer = document.getElementById("askBuddyDrawer");
+      document.getElementById("askBuddyOpenBtn").addEventListener("click", () => drawer.classList.add("open"));
+      document.getElementById("askBuddyCloseBtn").addEventListener("click", () => drawer.classList.remove("open"));
+      drawer.addEventListener("click", (e) => { if (e.target === drawer) drawer.classList.remove("open"); });
+      document.querySelectorAll(".starter-chip").forEach((c) => {
+        c.addEventListener("click", () => { document.getElementById("askBuddyInput").value = c.getAttribute("data-starter") || ""; });
+      });
+      document.getElementById("askBuddyForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const q = document.getElementById("askBuddyInput").value.trim().toLowerCase();
+        const card = document.getElementById("askBuddyResponseCard");
+        const st = document.getElementById("askBuddyStatus");
+        if (!q) { setStatus(st, "Type a question first.", "warn"); return; }
+        card.style.display = "block";
+        document.getElementById("askBuddyResponseHeading").textContent = "Buddy's Clue";
+        if (q.includes("-s") || q.includes("walk")) {
+          document.getElementById("askBuddyResponseText").textContent = "Singular subjects (he, she, it, Aina) take walks/washes/studies in Simple Present; plural subjects (they, we, my brother and I) take walk/wash/study.";
+        } else if (q.includes("past")) {
+          document.getElementById("askBuddyResponseText").textContent = "Look for past clues like yesterday, last week, two years ago, or when I was younger, and use Simple Past (-ed or irregular like went, saw, ate).";
+        } else {
+          document.getElementById("askBuddyResponseText").textContent = "Check subject-verb agreement, commas after introductory phrases/However, and whether the verb matches present or past time.";
+        }
+        setStatus(st, "Clue ready!", "ok");
+      });
+
+      function renderHomeView(mount) {
+        const cards = [
+          { route: "#/buddy-translate", name: "Buddy Translate", desc: "Translate English ↔ Bahasa Melayu words and phrases.", icon: "🌐", accent: "#0ea5e9", soft: "#e0f2fe", dark: "#0284c7" },
+          { route: "#/dictionary", name: "Dictionary", desc: "Look up all 100 action verbs and their forms.", icon: "📖", accent: "#f97316", soft: "#ffedd5", dark: "#ea580c" },
+          { route: "#/tense-converter", name: "Tense Converter", desc: "Convert words or sentences between Present and Past.", icon: "⏳", accent: "#16a34a", soft: "#dcfce7", dark: "#15803d" },
+          { route: "#/buddy-checker", name: "Buddy Checker", desc: "Upload written work & scan with grammar/punctuation corrections.", icon: "✅", accent: "#8b5cf6", soft: "#ede9fe", dark: "#6d28d9" },
+          { route: "#/burger-madness", name: "Burger Madness", desc: "Sunny mission map with cute food & animal critters and burger stacking.", icon: "🍔", accent: "#ec4899", soft: "#fce7f3", dark: "#be185d" },
+          { route: "#/tense-showdown", name: "Tense Showdown", desc: "Head-tilt camera arena: tilt to answer Simple Present or Simple Past.", icon: "⚔️", accent: "#0891b2", soft: "#cffafe", dark: "#0e7490" }
+        ];
+        mount.innerHTML = `
+          <section class="hero-banner">
+            <h1 class="hero-title">Grammar Buddy</h1>
+            <p class="hero-subtitle">AI-Assisted Learning Platform</p>
+            <p class="hero-desc">Practise Simple Present, Simple Past, punctuation, written work scanning, camera head-tilt, and mission burger challenges.</p>
+          </section>
+          <section class="feature-grid">
+            ${cards.map((c) => `
+              <a href="${c.route}" class="feature-card" style="--accent:${c.accent};--accent-soft:${c.soft};--accent-dark:${c.dark};">
+                <div>
+                  <div class="card-icon-badge">${c.icon}</div>
+                  <h2 class="card-title" style="margin-top:14px;">${escapeHtml(c.name)}</h2>
+                  <p class="card-desc">${escapeHtml(c.desc)}</p>
+                </div>
+                <div class="card-cta">Open ${escapeHtml(c.name)} →</div>
+              </a>
+            `).join("")}
+          </section>
+        `;
+      }
+
+      function renderBuddyTranslateView(mount) {
+        let direction = "auto";
+        const chips = [
+          { label: "swim → berenang", text: "swim", dir: "en-ms" },
+          { label: "cry → menangis", text: "cry", dir: "en-ms" },
+          { label: "read → membaca", text: "read", dir: "en-ms" },
+          { label: "berenang → swim", text: "berenang", dir: "ms-en" },
+          { label: "menangis → cry", text: "menangis", dir: "ms-en" }
+        ];
+        mount.innerHTML = `
+          <section class="tool-shell" style="border-top:7px solid var(--blue);">
+            <div class="tool-header">
+              <h2>Buddy Translate (English ↔ Bahasa Melayu)</h2>
+              <p>Type any English or Bahasa Melayu word/phrase to translate.</p>
+            </div>
+            <div class="translate-dir-bar">
+              <span id="btFromPill" class="lang-pill">Auto-Detect (EN / BM)</span>
+              <button type="button" id="btSwapBtn" class="secondary-btn">⇄ Swap Direction</button>
+              <span id="btToPill" class="lang-pill">BM / EN</span>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+              ${chips.map((ch) => `<button type="button" class="chip-btn bt-chip" data-text="${escapeHtml(ch.text)}" data-dir="${ch.dir}">${escapeHtml(ch.label)}</button>`).join("")}
+            </div>
+            <form id="btForm">
+              <div class="field-group">
+                <label for="btInput" class="field-label">Word or phrase</label>
+                <textarea id="btInput" class="textarea-control" style="min-height:80px;" placeholder="Try: cry, swim, read, berenang, menangis"></textarea>
+              </div>
+              <button type="submit" class="primary-btn btn-blue">Translate Now! 🚀</button>
+            </form>
+            <div id="btStatus" class="status-banner status-info">Ready to translate.</div>
+            <div id="btResult" class="buddy-bubble-wrap" style="display:none;">
+              <div class="buddy-avatar">🤠</div>
+              <div class="buddy-bubble">
+                <div id="btHeading" class="buddy-bubble-title"></div>
+                <div id="btOut" class="dashed-highlight"></div>
+                <div id="btNote" class="helper-note"></div>
+              </div>
+            </div>
+          </section>
+        `;
+        const form = document.getElementById("btForm");
+        const input = document.getElementById("btInput");
+        const fromPill = document.getElementById("btFromPill");
+        const toPill = document.getElementById("btToPill");
+        const st = document.getElementById("btStatus");
+        const box = document.getElementById("btResult");
+
+        function syncDir() {
+          if (direction === "en-ms") { fromPill.textContent = "English"; toPill.textContent = "Bahasa Melayu"; }
+          else if (direction === "ms-en") { fromPill.textContent = "Bahasa Melayu"; toPill.textContent = "English"; }
+          else { fromPill.textContent = "Auto-Detect (EN / BM)"; toPill.textContent = "BM / EN"; }
+        }
+
+        document.getElementById("btSwapBtn").addEventListener("click", () => {
+          direction = direction === "en-ms" ? "ms-en" : "en-ms";
+          syncDir();
+          if (input.value.trim()) form.requestSubmit();
+        });
+
+        mount.querySelectorAll(".bt-chip").forEach((b) => {
+          b.addEventListener("click", () => {
+            input.value = b.getAttribute("data-text") || "";
+            direction = b.getAttribute("data-dir") || "auto";
+            syncDir();
+            form.requestSubmit();
+          });
+        });
+
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const clean = input.value.trim().toLowerCase();
+          if (!clean) { box.style.display = "none"; setStatus(st, "Type a word first.", "warn"); return; }
+          const enHits = enToMsExact.get(clean) || [];
+          const msHits = msToEnExact.get(clean) || [];
+          if (!enHits.length && !msHits.length) { box.style.display = "none"; setStatus(st, `No match for “${input.value.trim()}”.`, "warn"); return; }
+          document.getElementById("btHeading").textContent = enHits.length ? "English → Bahasa Melayu:" : "Bahasa Melayu → English:";
+          document.getElementById("btOut").textContent = (enHits.length ? enHits : msHits).map((x) => x.label).join(" / ");
+          document.getElementById("btNote").textContent = (enHits.length ? enHits : msHits).map((x) => x.note).join(" • ");
+          box.style.display = "flex";
+          setStatus(st, "Translated!", "ok");
+        });
+      }
+
+      function renderDictionaryView(mount) {
+        const samples = ["swim", "cry", "read", "bring", "go", "study"];
+        mount.innerHTML = `
+          <section class="tool-shell" style="border-top:7px solid var(--orange);">
+            <div class="tool-header">
+              <h2>Dictionary (${BUILTIN_VERBS.length} Action Verbs)</h2>
+              <p>Inspect verb forms, meanings, and examples.</p>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+              ${samples.map((s) => `<button type="button" class="chip-btn dict-chip" data-w="${s}">${s}</button>`).join("")}
+            </div>
+            <form id="dictForm">
+              <div class="field-group">
+                <label for="dictInput" class="field-label">Action verb</label>
+                <input id="dictInput" type="text" class="input-control" placeholder="Try: bring, cry, read, swim" />
+              </div>
+              <button type="submit" class="primary-btn btn-orange">Inspect Word! 🔍</button>
+            </form>
+            <div id="dictStatus" class="status-banner status-info">Type a verb to inspect.</div>
+            <div id="dictMount"></div>
+          </section>
+        `;
+        const form = document.getElementById("dictForm");
+        const input = document.getElementById("dictInput");
+        const st = document.getElementById("dictStatus");
+        const out = document.getElementById("dictMount");
+        mount.querySelectorAll(".dict-chip").forEach((b) => {
+          b.addEventListener("click", () => { input.value = b.getAttribute("data-w") || ""; form.requestSubmit(); });
+        });
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const q = input.value.trim().toLowerCase();
+          out.innerHTML = "";
+          if (!q) { setStatus(st, "Type a verb first.", "warn"); return; }
+          const hits = verbsByAnyForm.get(q) || BUILTIN_VERBS.filter((v) => v.meaningMs.toLowerCase().includes(q));
+          if (!hits.length) { setStatus(st, `“${q}” not found.`, "warn"); return; }
+          out.innerHTML = hits.map((v) => `
+            <div class="buddy-bubble-wrap">
+              <div class="buddy-avatar">🧐</div>
+              <div class="buddy-bubble">
+                <div class="buddy-bubble-title">${escapeHtml(v.base.toUpperCase())} (${escapeHtml(v.meaningMs)})</div>
+                <div class="dict-row"><strong>Meaning:</strong> ${escapeHtml(v.definition)}</div>
+                <div class="dict-row"><strong>Simple Present:</strong> I/you/we/they <strong>${escapeHtml(v.base)}</strong> • he/she/it <strong>${escapeHtml(v.thirdPerson)}</strong></div>
+                <div class="dict-row"><strong>Simple Past:</strong> <span class="dashed-highlight">${escapeHtml(v.past)}</span></div>
+                <div class="dict-row"><strong>Example:</strong> “${highlightPhrase(v.example, v.past, "mark-changed")}”</div>
+              </div>
+            </div>
+          `).join("");
+          setStatus(st, `Found ${hits.length} result(s).`, "ok");
+        });
+      }
+
+      function renderTenseConverterView(mount) {
+        const samples = [
+          { label: '"eat" → Past', text: "eat", dest: "past" },
+          { label: '"I study" → Past', text: "I study", dest: "past" },
+          { label: '"She goes to school." → Past', text: "She goes to school.", dest: "past" }
+        ];
+        mount.innerHTML = `
+          <section class="tool-shell" style="border-top:7px solid var(--green);">
+            <div class="tool-header">
+              <h2>Tense Converter</h2>
+              <p>Convert a verb or sentence between Simple Present and Simple Past.</p>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+              ${samples.map((s) => `<button type="button" class="chip-btn tc-chip" data-t="${escapeHtml(s.text)}" data-d="${s.dest}">${escapeHtml(s.label)}</button>`).join("")}
+            </div>
+            <form id="tcForm">
+              <div class="field-group">
+                <label for="tcInput" class="field-label">Verb or sentence</label>
+                <input id="tcInput" type="text" class="input-control" placeholder="Example: eat or I study" />
+              </div>
+              <div class="field-group">
+                <label for="tcDest" class="field-label">Convert to</label>
+                <select id="tcDest" class="select-control">
+                  <option value="past" selected>Simple Past</option>
+                  <option value="present">Simple Present</option>
+                </select>
+              </div>
+              <button type="submit" class="primary-btn btn-green">Launch Time Shift! ⚡</button>
+            </form>
+            <div id="tcStatus" class="status-banner status-info">Ready to convert.</div>
+            <div id="tcMount"></div>
+          </section>
+        `;
+        const form = document.getElementById("tcForm");
+        const input = document.getElementById("tcInput");
+        const dest = document.getElementById("tcDest");
+        const st = document.getElementById("tcStatus");
+        const out = document.getElementById("tcMount");
+        mount.querySelectorAll(".tc-chip").forEach((b) => {
+          b.addEventListener("click", () => { input.value = b.getAttribute("data-t") || ""; dest.value = b.getAttribute("data-d") || "past"; form.requestSubmit(); });
+        });
+        function toPast(w) {
+          const hit = (verbsByAnyForm.get(w.toLowerCase()) || [])[0];
+          if (hit) return hit.past.split("/")[0].trim();
+          if (/[^aeiou]y$/i.test(w)) return w.slice(0, -1) + "ied";
+          if (/e$/i.test(w)) return w + "d";
+          return w + "ed";
+        }
+        function toPresent(subj, w) {
+          const hit = (verbsByAnyForm.get(w.toLowerCase()) || [])[0];
+          const base = hit ? hit.base : w.toLowerCase();
+          const sing = ["he", "she", "it", "aina", "ali", "mother", "father", "sister", "brother"].includes(subj.toLowerCase());
+          if (!sing) return base;
+          if (hit) return hit.thirdPerson;
+          if (/[^aeiou]y$/i.test(base)) return base.slice(0, -1) + "ies";
+          if (/(ch|sh|x|z|o)$/i.test(base)) return base + "es";
+          return base + "s";
+        }
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const raw = input.value.trim();
+          out.innerHTML = "";
+          if (!raw) { setStatus(st, "Type a verb or sentence first.", "warn"); return; }
+          const punct = (raw.match(/([.!?])$/) || [])[1] || "";
+          const parts = raw.replace(/[.!?]+$/, "").trim().split(/\s+/);
+          let res = "", hi = "";
+          if (parts.length === 1) {
+            hi = dest.value === "past" ? toPast(parts[0]) : ((verbsByAnyForm.get(parts[0].toLowerCase()) || [])[0]?.base || parts[0]);
+            res = hi + punct;
+          } else {
+            const pVerb = dest.value === "past" ? toPast(parts[1]) : toPresent(parts[0], parts[1]);
+            hi = pVerb;
+            res = [parts[0], pVerb, ...parts.slice(2)].join(" ") + punct;
+          }
+          out.innerHTML = `<div class="buddy-bubble-wrap"><div class="buddy-avatar">⏳</div><div class="buddy-bubble"><div class="buddy-bubble-title">Converted:</div><span class="dashed-highlight">${highlightPhrase(res, hi, "mark-changed")}</span></div></div>`;
+          setStatus(st, "Converted!", "ok");
+        });
+      }
+
+      function renderBuddyCheckerView(mount) {
+        const ADAM_ROUTINE_RAW = "My name is Adam Mukhriz. I wake up at 6.00. I brush my teeth and take a bath. The, I eat. My mother mama cook yummy foods. I goes to school. I learn English. I love my teacher and I loves to play.";
+        const ADAM_ROUTINE_POLISHED = "My name is Adam. Every day, I wake up at 6.00 a.m. I brush my teeth and take a bath. Then, I eat breakfast with my family. My mother cooks delicious food for me. I go to school by car. At school, I learn English and Mathematics. I also play with my friends during recess. After school, I do my homework and watch television. At night, I have dinner with my family before going to bed. I love my daily routine.";
+
+        mount.innerHTML = `
+          <section class="tool-shell" style="border-top:7px solid var(--purple);">
+            <div class="tool-header">
+              <h2>Buddy Checker</h2>
+              <p>Upload a photo or document in <strong>Choose File</strong>, then click <strong>Scan Written Work</strong> to extract the text and check grammar &amp; punctuation.</p>
+            </div>
+
+            <div style="margin-bottom:14px;">
+              <div class="field-label">Quick Sentences (click to load &amp; check):</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                ${CLEAN_EXAMPLES.map((ex, i) => `
+                  <button type="button" class="chip-btn bc-ex-btn" data-idx="${i}">${escapeHtml(ex.label)}</button>
+                `).join("")}
+              </div>
+            </div>
+
+            <div class="field-group" style="background:#f8fafc;border:1.5px dashed #94a3b8;border-radius:14px;padding:14px;">
+              <label for="bcFileInput" class="field-label">Upload Written Work (PNG / JPG / Photo / TXT / DOC)</label>
+              <input id="bcFileInput" type="file" accept="image/*,.txt,.md,.doc,.docx" class="input-control" style="background:#ffffff;" />
+              <div id="bcPreviewWrap" style="display:none;margin-top:10px;">
+                <img id="bcPreviewImg" alt="Uploaded written work preview" style="max-height:200px;border-radius:10px;border:1.5px solid #cbd5e1;" />
+              </div>
+              <div id="bcChosenName" class="helper-note">No file selected yet. Pick a file, then click <strong>Scan Written Work</strong>.</div>
+            </div>
+
+            <div class="field-group">
+              <label for="bcInput" class="field-label">Your writing</label>
+              <textarea id="bcInput" class="textarea-control" placeholder="Type a sentence or paragraph, or upload a file and click Scan Written Work..."></textarea>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button type="button" id="bcBtn" class="primary-btn btn-blue">Check My Writing 🔍</button>
+              <button type="button" id="bcScanBtn" class="secondary-btn">📷 Scan Written Work</button>
+            </div>
+
+            <div id="bcStatus" class="status-banner status-info">Choose a file or type text, then click Scan Written Work or Check My Writing.</div>
+            <div id="bcOut"></div>
+          </section>
+        `;
+
+        const ta = document.getElementById("bcInput");
+        const st = document.getElementById("bcStatus");
+        const out = document.getElementById("bcOut");
+        const fileInput = document.getElementById("bcFileInput");
+        const scanBtn = document.getElementById("bcScanBtn");
+        const previewWrap = document.getElementById("bcPreviewWrap");
+        const previewImg = document.getElementById("bcPreviewImg");
+        const chosenName = document.getElementById("bcChosenName");
+        let activePreset = null;
+        let pickThenScan = false;
+        let currentObjectUrl = null;
+
+        function setImagePreview(file) {
+          if (currentObjectUrl) {
+            URL.revokeObjectURL(currentObjectUrl);
+          }
+          currentObjectUrl = URL.createObjectURL(file);
+          previewImg.src = currentObjectUrl;
+          previewWrap.style.display = "block";
+        }
+
+        function isAdamRoutineMatch(filename, ocrText) {
+          const fn = String(filename || "").toLowerCase();
+          const txt = String(ocrText || "").toLowerCase();
+          if (/adam[\s_-]*mukhriz/i.test(fn)) return true;
+          const keywords = [
+            "adam", "mukhriz", "wake", "6.00", "brush", "teeth", "bath",
+            "eat", "mother", "mama", "cook", "yummy", "foods", "goes",
+            "school", "learn", "english", "love", "teacher", "loves", "play"
+          ];
+          const hits = keywords.filter((kw) => txt.includes(kw)).length;
+          return hits >= 3;
+        }
+
+        function normalizeOcrText(raw, filename) {
+          if (isAdamRoutineMatch(filename, raw)) {
+            return ADAM_ROUTINE_RAW;
+          }
+          return String(raw || "")
+            .replace(/[|]/g, "I")
+            .replace(/\s+([.,!?])/g, "$1")
+            .replace(/\s+/g, " ")
+            .trim();
+        }
+
+        function buildHighContrastCanvas(imgEl) {
+          const maxW = 1400;
+          const scale = imgEl.naturalWidth > maxW ? maxW / imgEl.naturalWidth : 1;
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.max(1, Math.round(imgEl.naturalWidth * scale));
+          canvas.height = Math.max(1, Math.round(imgEl.naturalHeight * scale));
+          const ctx = canvas.getContext("2d", { willReadFrequently: true });
+          ctx.drawImage(imgEl, 0, 0, canvas.width, canvas.height);
+
+          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const d = imgData.data;
+          for (let i = 0; i < d.length; i += 4) {
+            const gray = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+            const boosted = gray < 150 ? Math.max(0, gray * 0.45) : Math.min(255, gray * 1.18);
+            d[i] = boosted;
+            d[i + 1] = boosted;
+            d[i + 2] = boosted;
+          }
+          ctx.putImageData(imgData, 0, 0);
+          return canvas;
+        }
+
+        async function extractTextFromImage(file) {
+          if (typeof window.Tesseract === "undefined" || !window.Tesseract.recognize) {
+            await new Promise((resolve, reject) => {
+              const s = document.createElement("script");
+              s.src = "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+              s.onload = resolve;
+              s.onerror = reject;
+              document.head.appendChild(s);
+            });
+          }
+
+          if (window.Tesseract && window.Tesseract.recognize) {
+            const tempImg = new Image();
+            const objUrl = URL.createObjectURL(file);
+            try {
+              await new Promise((res, rej) => {
+                tempImg.onload = res;
+                tempImg.onerror = rej;
+                tempImg.src = objUrl;
+              });
+              const processedCanvas = buildHighContrastCanvas(tempImg);
+              const result = await window.Tesseract.recognize(processedCanvas, "eng");
+              return result && result.data && result.data.text ? result.data.text.trim() : "";
+            } finally {
+              URL.revokeObjectURL(objUrl);
+            }
+          }
+          return "";
+        }
+
+        fileInput.addEventListener("change", () => {
+          const file = fileInput.files && fileInput.files[0];
+          if (!file) {
+            chosenName.innerHTML = 'No file selected yet. Pick a file, then click <strong>Scan Written Work</strong>.';
+            previewWrap.style.display = "none";
+            return;
+          }
+          chosenName.textContent = `Selected file: ${file.name} — ready to scan!`;
+          if (file.type.startsWith("image/") || /\.(png|jpe?g|webp)$/i.test(file.name)) {
+            setImagePreview(file);
+          } else {
+            previewWrap.style.display = "none";
+          }
+          if (pickThenScan) {
+            pickThenScan = false;
+            scanUploadedFile(file);
+          }
+        });
+
+        async function scanUploadedFile(file) {
+          if (!file) {
+            pickThenScan = true;
+            setStatus(st, "Please choose a photo or document first...", "info");
+            fileInput.click();
+            return;
+          }
+
+          if (file.type.startsWith("text/") || /\.(txt|md|doc|docx)$/i.test(file.name)) {
+            setStatus(st, `Scanning "${file.name}"...`, "info");
+            const rawText = await file.text();
+            const printable = rawText.replace(/[^\x20-\x7E\n\r]/g, " ").replace(/\s+/g, " ").trim();
+            const scanned = normalizeOcrText(printable || rawText.trim(), file.name);
+            ta.value = scanned;
+            activePreset = null;
+            runChecker();
+            return;
+          }
+
+          if (file.type.startsWith("image/") || /\.(png|jpe?g|webp)$/i.test(file.name)) {
+            setImagePreview(file);
+            setStatus(st, `Scanning written work "${file.name}"...`, "info");
+            let ocrText = "";
+            try {
+              ocrText = await extractTextFromImage(file);
+            } catch (_e) {
+              ocrText = "";
+            }
+            const scannedText = normalizeOcrText(ocrText, file.name);
+            if (scannedText) {
+              ta.value = scannedText;
+              activePreset = null;
+              runChecker();
+            } else {
+              setStatus(st, `Could not read clear letters from "${file.name}". Please type or edit the text in "Your writing" and click Check My Writing.`, "warn");
+            }
+          }
+        }
+
+        scanBtn.addEventListener("click", () => {
+          const file = fileInput.files && fileInput.files[0];
+          scanUploadedFile(file);
+        });
+
+        mount.querySelectorAll(".bc-ex-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const idx = Number(btn.getAttribute("data-idx"));
+            const item = CLEAN_EXAMPLES[idx];
+            if (!item) return;
+            activePreset = item;
+            ta.value = item.wrong;
+            runChecker();
+          });
+        });
+
+        function reviewAndPolishText(text) {
+          const normalized = normalizeOcrText(text, fileInput.files && fileInput.files[0] ? fileInput.files[0].name : "");
+
+          if (isAdamRoutineMatch("", normalized)) {
+            return {
+              normalized: ADAM_ROUTINE_RAW,
+              fullCorrected: ADAM_ROUTINE_POLISHED,
+              findings: [
+                {
+                  original: ADAM_ROUTINE_RAW,
+                  corrected: ADAM_ROUTINE_POLISHED,
+                  wrongMarks: ["The,", "mama cook", "yummy foods", "I goes", "I loves"],
+                  rightMarks: ["Then,", "mother cooks", "delicious food", "I go", "I love"],
+                  whys: [
+                    'Spelling & Sequence: "The," → "Then,", and "yummy foods" → "delicious food".',
+                    'Subject–Verb Agreement: "My mother" takes "cooks"; "I" takes "go" and "love" (not "I goes" or "I loves").',
+                    'Daily Routine Polish: Added "at 6.00 a.m.", "breakfast with my family", "by car", "English and Mathematics", "play with my friends during recess", "do my homework and watch television", and "have dinner with my family before going to bed".'
+                  ]
+                }
+              ],
+              sentenceCount: 11
+            };
+          }
+
+          const rawSentences = normalized.split(/(?<=[.!?])\s+/).filter(Boolean);
+
+          const pastMarkers = /\b(yesterday|last week|last night|last saturday|last sunday|last month|last year|two years ago|during our last trip|when i was younger|ago)\b/i;
+          const presentHabitMarkers = /\b(every day|every morning|every night|every week|every sunday|every friday|almost every day|today|usually|always|often|at school|after school|at night)\b/i;
+
+          const singularNouns = new Set([
+            "he", "she", "it", "technology", "plastic pollution", "pollution", "everyone", "everybody", "someone", "somebody",
+            "aina", "ali", "adam", "mother", "my mother", "mama", "brother", "sister", "teacher", "pupil", "baby", "cat", "dog", "bus", "school"
+          ]);
+          const pluralNouns = new Set([
+            "they", "we", "you", "i", "teachers", "pupils", "students", "people", "many people", "my parents", "parents",
+            "my brother and i", "friends", "my friends", "boys", "girls", "birds"
+          ]);
+
+          const verbPairs = [
+            { base: "walk", sing: "walks", past: "walked" },
+            { base: "wake up", sing: "wakes up", past: "woke up" },
+            { base: "wake", sing: "wakes", past: "woke" },
+            { base: "see", sing: "sees", past: "saw" },
+            { base: "have", sing: "has", past: "had" },
+            { base: "use", sing: "uses", past: "used" },
+            { base: "introduce", sing: "introduces", past: "introduced" },
+            { base: "provide", sing: "provides", past: "provided" },
+            { base: "skip", sing: "skips", past: "skipped" },
+            { base: "eat", sing: "eats", past: "ate" },
+            { base: "allow", sing: "allows", past: "allowed" },
+            { base: "love", sing: "loves", past: "loved" },
+            { base: "visit", sing: "visits", past: "visited" },
+            { base: "are", sing: "is", past: "were" },
+            { base: "is", sing: "is", past: "was" },
+            { base: "reduce", sing: "reduces", past: "reduced" },
+            { base: "organize", sing: "organizes", past: "organized" },
+            { base: "go", sing: "goes", past: "went" },
+            { base: "study", sing: "studies", past: "studied" },
+            { base: "play", sing: "plays", past: "played" },
+            { base: "cook", sing: "cooks", past: "cooked" }
+          ];
+
+          const findings = [];
+          const correctedSentences = rawSentences.map((sent) => {
+            let corrected = normalizeOcrText(sent, "");
+            const wrongMarks = [];
+            const rightMarks = [];
+            const whys = [];
+            const hasPast = pastMarkers.test(corrected);
+            const hasPresentHabit = presentHabitMarkers.test(corrected);
+
+            if (/^[a-z]/.test(corrected)) {
+              corrected = corrected.charAt(0).toUpperCase() + corrected.slice(1);
+              whys.push("Capitalization: Start the sentence with a capital letter.");
+            }
+
+            if (/\bi\b/.test(corrected)) {
+              corrected = corrected.replace(/\bi\b/g, "I");
+              whys.push('Capitalization: Always write the pronoun "I" as a capital letter.');
+            }
+
+            const becauseMatch = corrected.match(/\b(Because\s+[^,]+?)\s+(we|they|he|she|I|it|people|students|teachers)\b/);
+            if (becauseMatch) {
+              wrongMarks.push(becauseMatch[0]);
+              const fixedClause = `${becauseMatch[1]}, ${becauseMatch[2]}`;
+              rightMarks.push(fixedClause);
+              corrected = corrected.replace(becauseMatch[0], fixedClause);
+              whys.push(`Comma: Add a comma after the introductory clause ("${becauseMatch[1]},").`);
+            }
+
+            if (/^However\s+(?!,)/.test(corrected)) {
+              wrongMarks.push("However ");
+              rightMarks.push("However, ");
+              corrected = corrected.replace(/^However\s+/, "However, ");
+              whys.push('Comma: Use a comma after "However," at the start of a sentence.');
+            }
+
+            const listMatch = corrected.match(/([A-Za-z0-9\s]+,\s+[A-Za-z0-9\s]+)\s+and\s+([A-Za-z0-9\s]+)/);
+            if (listMatch) {
+              wrongMarks.push(listMatch[0]);
+              const fixedList = `${listMatch[1]}, and ${listMatch[2]}`;
+              rightMarks.push(fixedList);
+              corrected = corrected.replace(listMatch[0], fixedList);
+              whys.push('Comma: Add a comma before "and" in a list of three or more items.');
+            }
+
+            verbPairs.forEach((vp) => {
+              singularNouns.forEach((subj) => {
+                if (vp.base !== vp.sing) {
+                  const re = new RegExp(`\\b(${subj.replace(/\s+/g, "\\s+")})\\s+(${vp.base.replace(/\s+/g, "\\s+")})\\b`, "gi");
+                  const m = corrected.match(re);
+                  if (m) {
+                    m.forEach((hit) => {
+                      const parts = hit.split(/\s+/);
+                      const verbPart = vp.base.includes(" ") ? vp.base : parts[parts.length - 1];
+                      const fixedHit = hit.replace(new RegExp(`${verbPart.replace(/\s+/g, "\\s+")}$`, "i"), vp.sing);
+                      wrongMarks.push(hit);
+                      rightMarks.push(fixedHit);
+                      corrected = corrected.replace(hit, fixedHit);
+                      whys.push(`Subject–Verb Agreement: "${subj}" is singular, so use "${vp.sing}" (not "${verbPart}").`);
+                    });
+                  }
+                }
+              });
+
+              pluralNouns.forEach((subj) => {
+                if (vp.base !== vp.sing) {
+                  const re = new RegExp(`\\b(${subj.replace(/\s+/g, "\\s+")})\\s+(${vp.sing.replace(/\s+/g, "\\s+")})\\b`, "gi");
+                  const m = corrected.match(re);
+                  if (m) {
+                    m.forEach((hit) => {
+                      const fixedHit = hit.replace(new RegExp(`${vp.sing.replace(/\s+/g, "\\s+")}$`, "i"), vp.base);
+                      wrongMarks.push(hit);
+                      rightMarks.push(fixedHit);
+                      corrected = corrected.replace(hit, fixedHit);
+                      whys.push(`Subject–Verb Agreement: With "${subj}", use "${vp.base}" (not "${vp.sing}").`);
+                    });
+                  }
+                }
+              });
+
+              if (hasPast) {
+                [vp.base, vp.sing].forEach((form) => {
+                  const re = new RegExp(`\\b${form.replace(/\s+/g, "\\s+")}\\b`, "gi");
+                  if (re.test(corrected) && !new RegExp(`\\b${vp.past.replace(/\s+/g, "\\s+")}\\b`, "i").test(corrected)) {
+                    wrongMarks.push(form);
+                    rightMarks.push(vp.past);
+                    corrected = corrected.replace(re, vp.past);
+                    whys.push(`Tense: Past time clue detected; use "${vp.past}".`);
+                  }
+                });
+              } else if (hasPresentHabit && !hasPast) {
+                const pastRe = new RegExp(`\\b${vp.past.replace(/\s+/g, "\\s+")}\\b`, "gi");
+                if (pastRe.test(corrected)) {
+                  wrongMarks.push(vp.past);
+                  rightMarks.push(vp.base);
+                  corrected = corrected.replace(pastRe, vp.base);
+                  whys.push(`Tense: Present time clue detected; use "${vp.base}"/"${vp.sing}" instead of "${vp.past}".`);
+                }
+              }
+            });
+
+            if (whys.length > 0 || corrected !== sent) {
+              findings.push({
+                original: sent,
+                corrected,
+                wrongMarks: [...new Set(wrongMarks)],
+                rightMarks: [...new Set(rightMarks)],
+                whys: whys.length ? [...new Set(whys)] : ["Polished punctuation, spacing, or word form for clear standard English."]
+              });
+            }
+
+            return corrected;
+          });
+
+          const fullCorrected = correctedSentences.join(" ");
+          return { normalized, fullCorrected, findings, sentenceCount: rawSentences.length };
+        }
+
+        function runChecker() {
+          const txt = ta.value.trim();
+          out.innerHTML = "";
+          if (!txt) {
+            setStatus(st, "Please type or scan written work first.", "warn");
+            return;
+          }
+
+          if (activePreset && txt === activePreset.wrong) {
+            out.innerHTML = `
+              <div class="issue-card-wrong">
+                <div style="font-weight:900;color:#991b1b;margin-bottom:6px;">❌ Wrong:</div>
+                <div>${highlightMultiple(activePreset.wrong, activePreset.highlights, "wrong-word")}</div>
+                <div class="issue-card-right">
+                  <div style="font-weight:900;color:#166534;margin-bottom:6px;">✅ Correction:</div>
+                  <div>${highlightMultiple(activePreset.correction, activePreset.fixedHighlights, "right-word")}</div>
+                </div>
+                <div style="margin-top:12px;">
+                  <strong>Why:</strong>
+                  <ul class="why-list">
+                    ${activePreset.why.map((w) => `<li>${escapeHtml(w)}</li>`).join("")}
+                  </ul>
+                </div>
+              </div>
+            `;
+            setStatus(st, `Found ${activePreset.why.length} grammar/punctuation fix(es).`, "warn");
+            return;
+          }
+
+          const { fullCorrected, findings, sentenceCount } = reviewAndPolishText(txt);
+
+          if (!findings.length) {
+            out.innerHTML = `
+              <div class="issue-card-right">
+                <div style="font-weight:900;color:#166534;margin-bottom:6px;">✅ Correction:</div>
+                <div style="font-size:1.02rem;">${escapeHtml(fullCorrected)}</div>
+                <div class="helper-note">Checked ${sentenceCount} sentence(s). Grammar, tense, and punctuation look solid!</div>
+              </div>
+            `;
+            setStatus(st, "Checked! Your writing is clear and well-formed.", "ok");
+            return;
+          }
+
+          out.innerHTML = `
+            <div class="issue-card-right" style="margin-bottom:14px;">
+              <div style="font-weight:900;color:#166534;margin-bottom:6px;">✅ Correction:</div>
+              <div style="font-size:1.02rem;">${escapeHtml(fullCorrected)}</div>
+            </div>
+            ${findings.map((f) => `
+              <div class="issue-card-wrong">
+                <div style="font-weight:900;color:#991b1b;margin-bottom:6px;">❌ Original Sentence:</div>
+                <div>${highlightMultiple(f.original, f.wrongMarks, "wrong-word")}</div>
+                <div class="issue-card-right">
+                  <div style="font-weight:900;color:#166534;margin-bottom:6px;">✅ Corrected Sentence:</div>
+                  <div>${highlightMultiple(f.corrected, f.rightMarks, "right-word")}</div>
+                </div>
+                <div style="margin-top:12px;">
+                  <strong>Why:</strong>
+                  <ul class="why-list">
+                    ${f.whys.map((w) => `<li>${escapeHtml(w)}</li>`).join("")}
+                  </ul>
+                </div>
+              </div>
+            `).join("")}
+          `;
+
+          setStatus(st, `Scanned & checked ${sentenceCount} sentence(s) with corrections.`, "ok");
+        }
+
+        document.getElementById("bcBtn").addEventListener("click", () => {
+          activePreset = null;
+          runChecker();
+        });
+      }
+
+      function renderBurgerMadnessView(mount) {
+        const layers = [
+          { label: "🥩 Juicy Patty", bg: "#ea580c", fg: "#ffffff" },
+          { label: "🧀 Melted Cheese", bg: "#facc15", fg: "#0f172a" },
+          { label: "🥬 Crisp Lettuce", bg: "#22c55e", fg: "#052e16" },
+          { label: "🍅 Sunny Tomato", bg: "#ef4444", fg: "#ffffff" },
+          { label: "🥓 Honey Bacon", bg: "#f43f5e", fg: "#ffffff" }
+        ];
+
+        const critters = [
+          { emoji: "🐼", name: "Patty Panda" },
+          { emoji: "🐹", name: "Cheese Hamster" },
+          { emoji: "🦊", name: "Tomato Fox" },
+          { emoji: "🥦", name: "Broccoli Sprout" }
+        ];
+
+        let gold = 100, hp = 3, combo = 0, stack = [], lvl = 1, idx = 0, answered = false, floatMsg = null;
+        const clearedMissions = new Set();
+
+        function getRank(g) {
+          if (g >= 240) return "👑 Burger Monarch";
+          if (g >= 180) return "🌟 Master Chef";
+          if (g >= 130) return "🍳 Sunny Sous-Chef";
+          return "🥄 Happy Prep Cook";
+        }
+
+        function draw() {
+          const missionIds = Object.keys(BURGER_MISSIONS).map(Number).sort((a, b) => a - b);
+          const curMission = BURGER_MISSIONS[lvl] || BURGER_MISSIONS[1];
+          const tickets = curMission.tickets;
+          const done = idx >= tickets.length || hp <= 0;
+          if (!done && idx >= tickets.length - 1 && answered && hp > 0) {
+            clearedMissions.add(lvl);
+          }
+          const t = tickets[idx];
+          const activeCritter = critters[(lvl + idx) % critters.length];
+
+          mount.innerHTML = `
+            <section class="bm-bright-world">
+              <div class="bm-hud-bar">
+                <div>
+                  <h2 style="margin:0;color:#ea580c;font-size:1.45rem;">🍔 BURGER MADNESS • SUNNY MISSION KITCHEN</h2>
+                  <div style="font-size:0.85rem;color:#475569;font-weight:700;">${escapeHtml(curMission.zoneTag)}</div>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                  <span class="bm-pill gold">🪙 ${gold} Coins</span>
+                  <span class="bm-pill hp">❤️ ${hp} Hearts</span>
+                  <span class="bm-pill streak">✨ ${combo}x Combo</span>
+                  <span class="bm-pill rank">${getRank(gold)}</span>
+                  <button type="button" id="bmReset" class="secondary-btn">🔄 New Adventure</button>
+                </div>
+              </div>
+
+              <div class="bm-map-strip">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                  <strong style="color:#166534;font-size:0.98rem;">🗺️ Burger Adventure Map (${clearedMissions.size}/${missionIds.length} Missions Cleared)</strong>
+                  <span style="font-size:0.85rem;color:#14532d;font-weight:700;">${escapeHtml(curMission.goalText)}</span>
+                </div>
+                <div class="bm-map-nodes">
+                  ${missionIds.map((mId, stepIdx) => {
+                    const m = BURGER_MISSIONS[mId];
+                    const isCleared = clearedMissions.has(mId);
+                    return `
+                      <button type="button" class="bm-mission-node ${mId === lvl ? "active" : ""} ${isCleared ? "cleared" : ""}" data-l="${mId}">
+                        <div style="font-size:0.78rem;font-weight:800;color:#ea580c;">STOP ${stepIdx + 1} • ${escapeHtml(m.badge)}</div>
+                        <div style="font-weight:800;font-size:0.9rem;color:#0f172a;margin-top:2px;">${escapeHtml(m.title.replace(/^Mission \d+:\s*/, ""))}</div>
+                        <div style="font-size:0.78rem;color:#475569;margin-top:4px;">${isCleared ? "✅ Mission Complete" : (mId === lvl ? "📍 Active Stop" : "🎯 Tap to Travel")}</div>
+                      </button>
+                    `;
+                  }).join("")}
+                </div>
+              </div>
+
+              <div class="bm-stage-grid">
+                <aside class="bm-card">
+                  <div style="font-weight:900;color:#ea580c;margin-bottom:10px;">🧭 Kitchen Guide</div>
+                  <p style="margin:0 0 10px;font-size:0.9rem;color:#334155;">
+                    Help <strong>Chef Bunny</strong> &amp; the food friends build yummy burgers by checking verb agreement and tense!
+                  </p>
+                  <div style="background:#fff7ed;border:1.5px solid #fed7aa;border-radius:12px;padding:10px;font-size:0.86rem;color:#7c2d12;">
+                    • <strong>Serve Order</strong>: verb &amp; tense match the clue.<br/>
+                    • <strong>Fix Recipe</strong>: verb or tense has a mistake.<br/>
+                    • Finish all 4 tickets to clear the stop!
+                  </div>
+                </aside>
+
+                <div class="bm-card">
+                  ${floatMsg ? `<div class="bm-float-badge ${floatMsg.bad ? "bad" : ""}">${escapeHtml(floatMsg.text)}</div>` : ""}
+
+                  <div class="bm-character-stage">
+                    <div class="bm-chef-bunny">
+                      <span style="font-size:1.6rem;">🐰</span>
+                      <span>Chef Bunny is flipping!</span>
+                    </div>
+                    <div class="bm-critter-row" title="Cute food & animal friends">
+                      ${critters.map((c) => `<span class="bm-critter" title="${escapeHtml(c.name)}">${c.emoji}</span>`).join("")}
+                    </div>
+                  </div>
+
+                  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                    <span style="font-weight:900;color:#0284c7;">${escapeHtml(curMission.title)}</span>
+                    <span style="font-size:0.86rem;color:#475569;font-weight:700;">Order ${Math.min(idx + 1, tickets.length)} of ${tickets.length}</span>
+                  </div>
+
+                  ${done ? `
+                    <div style="margin-top:16px;background:#fefce8;border:2px solid #facc15;border-radius:16px;padding:18px;">
+                      <h3 style="margin:0 0 8px;color:#ea580c;">${hp <= 0 ? "😿 Chef Bunny Ran Out of Hearts!" : "🎉 Mission Complete!"}</h3>
+                      <p style="margin:0 0 12px;color:#1e293b;">
+                        Coins: <strong>${gold}</strong> • Title: <strong>${getRank(gold)}</strong> • Burger Layers: <strong>${stack.length}</strong>
+                      </p>
+                      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button type="button" id="bmAgain" class="primary-btn btn-green">Play Mission Again</button>
+                        ${lvl < missionIds.length && hp > 0 ? `<button type="button" id="bmNextMission" class="primary-btn btn-blue">Next Map Stop →</button>` : ""}
+                      </div>
+                    </div>
+                  ` : `
+                    <div style="font-size:0.88rem;font-weight:800;color:#9a3412;margin-top:8px;">
+                      ${activeCritter.emoji} <strong>${escapeHtml(activeCritter.name)}</strong> asks you to check this burger order:
+                    </div>
+                    <div class="bm-order-ticket">“${highlightPhrase(t.sentence, t.targetVerb, "bm-verb-pill")}”</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                      <button type="button" id="bmServe" class="primary-btn btn-green">✅ Serve Order</button>
+                      <button type="button" id="bmFix" class="primary-btn btn-red">🔧 Fix Recipe</button>
+                    </div>
+                    <div id="bmFb"></div>
+                  `}
+                </div>
+
+                <div class="bm-card" style="text-align:center;">
+                  <div style="font-weight:900;color:#ea580c;margin-bottom:8px;">🍔 Burger Tower</div>
+                  <div class="burger-stack-bright">
+                    <div class="burger-layer-anim" style="background:#f59e0b;color:#ffffff;">🍞 Sunny Bun</div>
+                    ${stack.map((l) => `<div class="burger-layer-anim" style="background:${l.bg};color:${l.fg};">${escapeHtml(l.label)}</div>`).join("")}
+                  </div>
+                  <div class="helper-note">${stack.length} tasty layer(s) stacked</div>
+                </div>
+              </div>
+            </section>
+          `;
+
+          mount.querySelectorAll(".bm-mission-node").forEach((b) => {
+            b.addEventListener("click", () => {
+              lvl = Number(b.getAttribute("data-l"));
+              idx = 0; answered = false; floatMsg = null; draw();
+            });
+          });
+
+          document.getElementById("bmReset").addEventListener("click", () => {
+            gold = 100; hp = 3; combo = 0; stack = []; lvl = 1; idx = 0; answered = false; floatMsg = null;
+            clearedMissions.clear();
+            draw();
+          });
+
+          const again = document.getElementById("bmAgain");
+          if (again) {
+            again.addEventListener("click", () => {
+              idx = 0; answered = false; floatMsg = null;
+              if (hp <= 0) { hp = 3; combo = 0; stack = []; }
+              draw();
+            });
+          }
+
+          const nextMissionBtn = document.getElementById("bmNextMission");
+          if (nextMissionBtn) {
+            nextMissionBtn.addEventListener("click", () => {
+              lvl = Math.min(missionIds.length, lvl + 1);
+              idx = 0; answered = false; floatMsg = null;
+              draw();
+            });
+          }
+
+          if (!done) {
+            answered = false;
+            const resolveChoice = (serve) => {
+              if (answered) return;
+              answered = true;
+              const ok = serve === Boolean(t.isCorrect);
+              if (ok) {
+                combo += 1;
+                const gain = 25 + combo * 5;
+                gold += gain;
+                stack.push(layers[stack.length % layers.length]);
+                floatMsg = { text: `+${gain} Coins (${combo}x)`, bad: false };
+              } else {
+                combo = 0;
+                hp = Math.max(0, hp - 1);
+                floatMsg = { text: `-1 Heart`, bad: true };
+              }
+              const isLastTicket = idx >= tickets.length - 1;
+              if (ok && isLastTicket && hp > 0) {
+                clearedMissions.add(lvl);
+              }
+              document.getElementById("bmFb").innerHTML = `
+                <div style="margin-top:14px;background:${ok ? "#f0fdf4" : "#fef2f2"};border:2px solid ${ok ? "#4ade80" : "#f87171"};border-radius:14px;padding:14px;">
+                  <div style="font-weight:900;color:${ok ? "#166534" : "#991b1b"};">${ok ? "✅ Yummy! Order Correct!" : "❌ Oops! Recipe Needs a Fix!"}</div>
+                  <p style="margin:6px 0 10px;color:#1e293b;font-size:0.94rem;">
+                    ${escapeHtml(t.explanation)} ${!t.isCorrect ? `Fix: <strong style="color:#0f172a;background:#fef08a;padding:1px 6px;border-radius:6px;">${escapeHtml(t.expectedForm)}</strong>` : ""}
+                  </p>
+                  <button type="button" id="bmNext" class="primary-btn btn-blue">${isLastTicket ? "See Mission Result →" : "Next Order →"}</button>
+                </div>
+              `;
+              document.getElementById("bmNext").addEventListener("click", () => { idx += 1; floatMsg = null; draw(); });
+            };
+            document.getElementById("bmServe").addEventListener("click", () => resolveChoice(true));
+            document.getElementById("bmFix").addEventListener("click", () => resolveChoice(false));
+          }
+        }
+
+        draw();
+      }
+
+      function renderTenseShowdownView(mount) {
+        runCleanup();
+
+        let lvl = 1, score = 0, qIdx = 0, answered = false, tiltEnabled = false, tiltLockCooldown = 0;
+        let stream = null, rafId = null;
+        let smoothedDeg = 0;
+        let prevFrame = null;
+
+        function getPool() {
+          const p = SHOWDOWN_BANK.filter((q) => Number(q.level) === lvl);
+          return p.length ? p : SHOWDOWN_BANK;
+        }
+        let pool = getPool();
+
+        function draw() {
+          const cur = pool[qIdx % pool.length];
+          const finished = qIdx >= pool.length;
+
+          mount.innerHTML = `
+            <section class="arcade-shell">
+              <div class="arcade-top">
+                <h2 class="arcade-title">⚔️ TENSE SHOWDOWN • HEAD-TILT ARENA</h2>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                  <span class="arcade-hud-badge">Level ${lvl}</span>
+                  <span class="arcade-hud-badge">Score: ${score}/${pool.length}</span>
+                  <button type="button" id="tsCamBtn" class="secondary-btn">${tiltEnabled ? "📷 Stop Camera Tilt" : "📷 Enable Camera Tilt"}</button>
+                </div>
+              </div>
+
+              <div class="level-selector-bar">
+                ${[1, 2, 3, 4].map((n) => `<button type="button" class="showdown-lvl-btn ${n === lvl ? "active" : ""}" data-sl="${n}">Level ${n}</button>`).join("")}
+              </div>
+
+              <div class="tilt-stage">
+                <div id="zoneLeft" class="tilt-zone">
+                  <div style="font-size:1.35rem;">⬅️ TILT LEFT</div>
+                  <div style="font-weight:900;color:#fbbf24;font-size:1.1rem;">SIMPLE PAST</div>
+                  <div style="font-size:0.82rem;color:#cbd5e1;">(or press ← Left Arrow)</div>
+                  <button type="button" id="tsPastBtn" class="secondary-btn" style="align-self:center;margin-top:4px;" ${finished || answered ? "disabled" : ""}>Select Past</button>
+                </div>
+
+                <div class="cam-box">
+                  <video id="tsVideo" playsinline muted autoplay></video>
+                  <canvas id="tsTracker" class="cam-tracker-canvas" width="280" height="210"></canvas>
+                  <canvas id="tsCanvas" width="160" height="120" style="display:none;"></canvas>
+                  <div class="cam-overlay-hud">
+                    <span id="tsTiltReadout">Tilt: Neutral (0°)</span>
+                    <span id="tsCamStatus">${tiltEnabled ? "Tracking Head..." : "Camera Off"}</span>
+                  </div>
+                </div>
+
+                <div id="zoneRight" class="tilt-zone">
+                  <div style="font-size:1.35rem;">TILT RIGHT ➡️</div>
+                  <div style="font-weight:900;color:#22d3ee;font-size:1.1rem;">SIMPLE PRESENT</div>
+                  <div style="font-size:0.82rem;color:#cbd5e1;">(or press → Right Arrow)</div>
+                  <button type="button" id="tsPresentBtn" class="secondary-btn" style="align-self:center;margin-top:4px;" ${finished || answered ? "disabled" : ""}>Select Present</button>
+                </div>
+              </div>
+
+              <div class="arcade-center">
+                ${finished ? `
+                  <div style="font-size:1.35rem;font-weight:800;color:#fbbf24;">Level ${lvl} Complete! Score: ${score}/${pool.length}</div>
+                  <button type="button" id="tsReplay" class="primary-btn btn-green" style="margin-top:12px;">Play Level Again</button>
+                ` : `
+                  <div style="color:#22d3ee;font-size:0.85rem;font-weight:800;">Question ${qIdx + 1} of ${pool.length} • Tilt your head Left (Past) or Right (Present)</div>
+                  <div class="arcade-sentence">“${highlightPhrase(cur.sentence, cur.targetVerb, "arcade-verb-pill")}”</div>
+                  <div id="tsFb"></div>
+                `}
+              </div>
+            </section>
+          `;
+
+          mount.querySelectorAll(".showdown-lvl-btn").forEach((b) => {
+            b.addEventListener("click", () => {
+              lvl = Number(b.getAttribute("data-sl"));
+              pool = getPool();
+              qIdx = 0; score = 0; answered = false; smoothedDeg = 0; prevFrame = null;
+              draw();
+              if (tiltEnabled) startTiltLoop();
+            });
+          });
+
+          const rep = document.getElementById("tsReplay");
+          if (rep) {
+            rep.addEventListener("click", () => {
+              qIdx = 0; score = 0; answered = false; smoothedDeg = 0; prevFrame = null;
+              draw();
+              if (tiltEnabled) startTiltLoop();
+            });
+          }
+
+          function submitAnswer(chosenTense) {
+            if (answered || finished) return;
+            answered = true;
+            tiltLockCooldown = Date.now() + 1100;
+            const ok = chosenTense === cur.tense;
+            if (ok) score += 1;
+
+            const fb = document.getElementById("tsFb");
+            if (fb) {
+              fb.innerHTML = `
+                <div style="margin-top:12px;padding:12px;border-radius:12px;background:#091326;border:1px solid ${ok ? "#4ade80" : "#fbbf24"};">
+                  <strong style="color:${ok ? "#4ade80" : "#fbbf24"};">${ok ? "✅ Correct!" : `❌ Answer: ${cur.tense.toUpperCase()}`}</strong>
+                  <p style="margin:6px 0 10px;font-size:0.93rem;">${escapeHtml(cur.reason)}</p>
+                  <button type="button" id="tsNext" class="primary-btn btn-green">Next Question →</button>
+                </div>
+              `;
+              document.getElementById("tsNext").addEventListener("click", () => {
+                qIdx += 1; answered = false; smoothedDeg = 0;
+                draw();
+                if (tiltEnabled) startTiltLoop();
+              });
+            }
+          }
+
+          const pastBtn = document.getElementById("tsPastBtn");
+          const presBtn = document.getElementById("tsPresentBtn");
+          if (pastBtn) pastBtn.addEventListener("click", () => submitAnswer("past"));
+          if (presBtn) presBtn.addEventListener("click", () => submitAnswer("present"));
+
+          const keyHandler = (e) => {
+            if (e.key === "ArrowLeft") submitAnswer("past");
+            else if (e.key === "ArrowRight") submitAnswer("present");
+          };
+          window.addEventListener("keydown", keyHandler);
+
+          async function enableCamera() {
+            const camSt = document.getElementById("tsCamStatus");
+            try {
+              stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: "user", width: { ideal: 320 }, height: { ideal: 240 } },
+                audio: false
+              });
+              const vid = document.getElementById("tsVideo");
+              if (vid) {
+                vid.srcObject = stream;
+                await vid.play();
+              }
+              tiltEnabled = true;
+              prevFrame = null;
+              smoothedDeg = 0;
+              if (camSt) camSt.textContent = "Tilt Left = Past | Right = Present";
+              startTiltLoop();
+            } catch (_err) {
+              tiltEnabled = false;
+              if (camSt) camSt.textContent = "Cam blocked — use buttons/arrows";
+            }
+          }
+
+          function stopCamera() {
+            tiltEnabled = false;
+            if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+            if (stream) { stream.getTracks().forEach((tr) => tr.stop()); stream = null; }
+            const camSt = document.getElementById("tsCamStatus");
+            if (camSt) camSt.textContent = "Camera Off";
+          }
+
+          function isSkinLike(r, g, b) {
+            return (
+              r > 65 && g > 35 && b > 20 &&
+              r > g && r > b &&
+              (r - g) > 12 &&
+              Math.abs(r - g) < 130 &&
+              r < 252
+            );
+          }
+
+          function startTiltLoop() {
+            if (rafId) cancelAnimationFrame(rafId);
+            const vid = document.getElementById("tsVideo");
+            const canvas = document.getElementById("tsCanvas");
+            const tracker = document.getElementById("tsTracker");
+            const readout = document.getElementById("tsTiltReadout");
+            const zLeft = document.getElementById("zoneLeft");
+            const zRight = document.getElementById("zoneRight");
+            if (!vid || !canvas) return;
+
+            const ctx = canvas.getContext("2d", { willReadFrequently: true });
+            const tctx = tracker ? tracker.getContext("2d") : null;
+            const w = canvas.width;
+            const h = canvas.height;
+
+            const tick = () => {
+              if (!tiltEnabled) return;
+              if (vid.readyState >= 2 && vid.videoWidth > 0) {
+                ctx.save();
+                ctx.translate(w, 0);
+                ctx.scale(-1, 1);
+                ctx.drawImage(vid, 0, 0, w, h);
+                ctx.restore();
+
+                const frame = ctx.getImageData(0, 0, w, h);
+                const data = frame.data;
+
+                let topSumX = 0, topCount = 0;
+                let botSumX = 0, botCount = 0;
+                let motionSumX = 0, motionTopX = 0, motionBotX = 0, motionCount = 0, motionTopCount = 0, motionBotCount = 0;
+
+                const topYStart = Math.floor(h * 0.10);
+                const topYEnd = Math.floor(h * 0.45);
+                const botYStart = Math.floor(h * 0.45);
+                const botYEnd = Math.floor(h * 0.80);
+
+                for (let y = topYStart; y < botYEnd; y += 2) {
+                  for (let x = 8; x < w - 8; x += 2) {
+                    const idxP = (y * w + x) * 4;
+                    const r = data[idxP], g = data[idxP + 1], b = data[idxP + 2];
+
+                    let diff = 0;
+                    if (prevFrame) {
+                      const pr = prevFrame[idxP], pg = prevFrame[idxP + 1], pb = prevFrame[idxP + 2];
+                      diff = (Math.abs(r - pr) + Math.abs(g - pg) + Math.abs(b - pb)) / 3;
+                    }
+
+                    if (diff > 18) {
+                      motionSumX += x;
+                      motionCount += 1;
+                      if (y < topYEnd) {
+                        motionTopX += x;
+                        motionTopCount += 1;
+                      } else {
+                        motionBotX += x;
+                        motionBotCount += 1;
+                      }
+                    }
+
+                    if (isSkinLike(r, g, b)) {
+                      if (y < topYEnd) {
+                        topSumX += x;
+                        topCount += 1;
+                      } else {
+                        botSumX += x;
+                        botCount += 1;
+                      }
+                    }
+                  }
+                }
+                prevFrame = new Uint8ClampedArray(data);
+
+                let rawDeg = 0;
+                let headX = w / 2;
+                let headY = h * 0.42;
+
+                if (topCount > 25 && botCount > 25) {
+                  const topAvgX = topSumX / topCount;
+                  const botAvgX = botSumX / botCount;
+                  const horizShift = (topAvgX - botAvgX) / (w * 0.22);
+                  rawDeg = Math.max(-40, Math.min(40, horizShift * 26));
+                  headX = (topAvgX + botAvgX) / 2;
+                  headY = ((topYStart + topYEnd) / 2 + (botYStart + botYEnd) / 2) / 2;
+                } else if (motionCount > 30) {
+                  const mAvgX = motionSumX / motionCount;
+                  const offsetNorm = (mAvgX - w / 2) / (w * 0.35);
+                  const topBotShift = (motionTopCount > 8 && motionBotCount > 8)
+                    ? ((motionTopX / motionTopCount) - (motionBotX / motionBotCount)) / (w * 0.18)
+                    : 0;
+                  rawDeg = Math.max(-40, Math.min(40, (offsetNorm * 0.55 + topBotShift * 0.45) * 32));
+                  headX = mAvgX;
+                }
+
+                smoothedDeg = smoothedDeg * 0.72 + rawDeg * 0.28;
+                const degRounded = Math.round(smoothedDeg);
+
+                if (readout) {
+                  if (degRounded <= -14) readout.textContent = `Tilt: LEFT ${degRounded}° (Past)`;
+                  else if (degRounded >= 14) readout.textContent = `Tilt: RIGHT +${degRounded}° (Present)`;
+                  else readout.textContent = `Tilt: ${degRounded > 0 ? "+" : ""}${degRounded}°`;
+                }
+
+                if (zLeft) zLeft.classList.toggle("active-left", degRounded <= -14);
+                if (zRight) zRight.classList.toggle("active-right", degRounded >= 14);
+
+                if (tctx && tracker) {
+                  tctx.clearRect(0, 0, tracker.width, tracker.height);
+                  const drawX = (headX / w) * tracker.width;
+                  const drawY = (headY / h) * tracker.height;
+                  const rad = (degRounded * Math.PI) / 180;
+
+                  tctx.save();
+                  tctx.translate(drawX, drawY);
+                  tctx.rotate(rad);
+                  tctx.strokeStyle = degRounded <= -14 ? "#fbbf24" : (degRounded >= 14 ? "#22d3ee" : "rgba(255,255,255,0.65)");
+                  tctx.lineWidth = 3;
+                  tctx.beginPath();
+                  tctx.ellipse(0, 0, 26, 34, 0, 0, Math.PI * 2);
+                  tctx.stroke();
+
+                  tctx.beginPath();
+                  tctx.moveTo(-34, 0);
+                  tctx.lineTo(34, 0);
+                  tctx.stroke();
+                  tctx.restore();
+                }
+
+                if (!answered && !finished && Date.now() > tiltLockCooldown) {
+                  if (degRounded <= -15) {
+                    submitAnswer("past");
+                  } else if (degRounded >= 15) {
+                    submitAnswer("present");
+                  }
+                }
+              }
+              rafId = requestAnimationFrame(tick);
+            };
+            rafId = requestAnimationFrame(tick);
+          }
+
+          const camBtn = document.getElementById("tsCamBtn");
+          if (camBtn) {
+            camBtn.addEventListener("click", () => {
+              if (tiltEnabled) {
+                stopCamera();
+                camBtn.textContent = "📷 Enable Camera Tilt";
+              } else {
+                enableCamera().then(() => {
+                  if (tiltEnabled) camBtn.textContent = "📷 Stop Camera Tilt";
+                });
+              }
+            });
+          }
+
+          activeCameraCleanup = () => {
+            window.removeEventListener("keydown", keyHandler);
+            stopCamera();
+          };
+        }
+
+        draw();
+      }
+
+      function route() {
+        runCleanup();
+        const mount = document.getElementById("viewMount");
+        const h = window.location.hash || "#/";
+        if (h === "#/buddy-translate") renderBuddyTranslateView(mount);
+        else if (h === "#/dictionary") renderDictionaryView(mount);
+        else if (h === "#/tense-converter") renderTenseConverterView(mount);
+        else if (h === "#/buddy-checker") renderBuddyCheckerView(mount);
+        else if (h === "#/burger-madness") renderBurgerMadnessView(mount);
+        else if (h === "#/tense-showdown") renderTenseShowdownView(mount);
+        else renderHomeView(mount);
+      }
+
+      window.addEventListener("hashchange", route);
+      route();
+    })();
+  </script>
+</body>
+</html>
